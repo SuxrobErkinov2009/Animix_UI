@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./main.css" />
+    <title>Animix UI - Neon Community</title>
+  </head>
+  <body>
+    <div id="landingPage" class="landing-hero">
+      <div class="landing-header">
+        <div class="container landing-header__wrapper">
+          <div class="header__logo"><h1>Animix UI</h1></div>
+          <div class="auth-buttons">
+            <button class="tab-btn auth-trigger" id="showLoginBtn">
+              Log in
+            </button>
+            <button class="create-neon-btn" id="showRegisterBtn">
+              Register
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="landing-body">
+        <h2 class="hero-title">
+          Dasturchilar Uchun <span class="neon-text">Maftunkor</span> UI
+          Elementlar
+        </h2>
+        <p class="hero-desc">
+          Uiverse uslubidagi eng yorqin, kontrastli va ochiq kodli neon
+          elementlar jamlanmasi. O'zingizga yoqqan kodni oling, ulashing va
+          platformaga hissa qo'shing.
+        </p>
+        <button class="create-neon-btn large-btn" id="exploreBtn">
+          Platformani ko'rish
+        </button>
+      </div>
+    </div>
+
+    <div id="mainDashboard" class="dashboard-root" style="display: none">
+      <header class="header">
+        <div class="container">
+          <div class="header__wrapper">
+            <div class="header__logo">
+              <h1
+                style="
+                  color: #00f3ff;
+                  font-family: sans-serif;
+                  text-shadow: 0 0 10px #00f3ff;
+                  margin: 0;
+                "
+              >
+                Animix UI
+              </h1>
+            </div>
+            <div class="header__search">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Elementlarni qidirish..."
+              />
+            </div>
+            <div
+              class="header__actions"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                position: relative;
+              "
+            >
+              <button
+                class="create-neon-btn"
+                id="openCreateModalBtn"
+                style="display: none"
+              >
+                Yaratish
+              </button>
+
+              <a
+                href="./save.html"
+                id="headerSaveBtn"
+                class="tab-btn"
+                style="
+                  color: #00f3ff;
+                  border: 1px solid #00f3ff;
+                  padding: 6px 12px 10px 11px;
+                  border-radius: 20px;
+                  text-decoration: none;
+                  font-size: 14px;
+                  display: none;
+                  font-weight: bold;
+                  background: rgba(0, 243, 255, 0.03);
+                  box-shadow: 0 0 5px rgba(0, 243, 255, 0.1);
+                "
+                >Saqlanganlar</a
+              >
+
+              <div
+                id="profil-konteyner"
+                style="
+                  position: relative;
+                  display: flex;
+                  align-items: center;
+                  cursor: pointer;
+                "
+              >
+                <span
+                  id="userDisplay"
+                  style="
+                    color: #00ff99;
+                    font-weight: bold;
+                    text-shadow: 0 0 2px #00ff99;
+                  "
+                ></span>
+              </div>
+
+              <div
+                id="profileDropdown"
+                style="
+                  display: none;
+                  position: absolute;
+                  right: 0;
+                  top: 100%;
+                  margin-top: 10px;
+                  background: #0b0c10;
+                  border: 1px solid #ff007c;
+                  border-radius: 8px;
+                  box-shadow: 0 0 15px rgba(255, 0, 124, 0.2);
+                  z-index: 100;
+                  min-width: 120px;
+                  overflow: hidden;
+                "
+              >
+                <button
+                  id="logoutBtn"
+                  style="
+                    width: 100%;
+                    background: transparent;
+                    border: none;
+                    color: #ff007c;
+                    padding: 10px 15px;
+                    font-weight: bold;
+                    font-size: 14px;
+                    cursor: pointer;
+                    text-align: center;
+                    transition: background 0.3s;
+                  "
+                >
+                  Chiqish 🚪
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="container main-layout">
+          <aside class="sidebar">
+            <ul class="sidebar__menu">
+              <li class="sidebar__item active" data-index="0">
+                🟢 🔘 Buttonlar
+              </li>
+              <li class="sidebar__item" data-index="1">⏳ Loaderlar</li>
+              <li class="sidebar__item" data-index="2">⌨️ Inputlar</li>
+              <li class="sidebar__item" data-index="3">🪟 Modallar</li>
+              <li class="sidebar__item" data-index="4">🗂️ Kartalar</li>
+            </ul>
+          </aside>
+
+          <section class="content-area">
+            <div class="content__header">
+              <h2>Buttonlar</h2>
+              <p>Zamonaviy buttonlar</p>
+            </div>
+            <div class="elements__grid" id="elementsGrid"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-overlay" id="authModal">
+      <div class="modal-box auth-box">
+        <div class="modal-header">
+          <h3 id="authModalTitle">Tizimga Kirish</h3>
+          <button class="close-modal-btn" id="closeAuthBtn">&times;</button>
+        </div>
+        <form class="modal-form" id="authForm">
+          <div class="form-group">
+            <label for="authUsername">Foydalanuvchi nomi (Username)</label>
+            <input type="text" id="authUsername" required autocomplete="off" />
+          </div>
+
+          <div class="form-group" id="emailFormGroup" style="display: none">
+            <label for="authEmail">Google Account (Email)</label>
+            <input
+              type="email"
+              id="authEmail"
+              autocomplete="off"
+              placeholder="misol@gmail.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="authPassword">Parol</label>
+            <input type="password" id="authPassword" required />
+          </div>
+          <div
+            id="authError"
+            style="
+              color: #ff007c;
+              font-size: 14px;
+              margin-bottom: 10px;
+              font-weight: bold;
+              display: none;
+            "
+          ></div>
+          <button
+            type="submit"
+            class="submit-neon-btn"
+            id="authSubmitBtn"
+            style="width: 100%"
+          >
+            Kirish
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="createModal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Yangi Element Qo'shish</h3>
+          <button class="close-modal-btn" id="closeCreateBtn">&times;</button>
+        </div>
+        <form class="modal-form" id="createElementForm">
+          <div class="form-group">
+            <label for="elCategory">Kategoriya</label>
+            <select id="elCategory">
+              <option value="button">Button</option>
+              <option value="loader">Loader</option>
+              <option value="input">Input</option>
+              <option value="modal">Modal</option>
+              <option value="card">Karta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="elName">Element nomi</label>
+            <input type="text" id="elName" required />
+          </div>
+          <div class="form-group">
+            <label for="elHtml">HTML Kodu</label>
+            <textarea id="elHtml" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="elCss">CSS Kodu</label>
+            <textarea id="elCss" rows="4"></textarea>
+          </div>
+          <button type="submit" class="submit-neon-btn" style="width: 100%">
+            Boshqaruv paneliga qo'shish
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- CODE MODAL - FIXED VERSION -->
+    <div class="modal-overlay" id="codeModal">
+      <div class="uiverse-modal">
+        <div class="uiverse-modal__header">
+          <h3>Element Kodlari</h3>
+          <button class="close-modal-btn" id="closeCodeBtn">&times;</button>
+        </div>
+        
+        <div class="uiverse-modal__body">
+          <!-- Preview Bo'limi -->
+          <div class="uiverse-modal__preview-box">
+            <div id="modalElementPreview"></div>
+          </div>
+          
+          <!-- Code Bo'limi -->
+          <div class="uiverse-modal__code-box">
+            <!-- Tabs -->
+            <div class="uiverse-tabs">
+              <div style="display: flex; gap: 5px">
+                <button class="tab-btn active" data-lang="html">HTML</button>
+                <button class="tab-btn" data-lang="css">CSS</button>
+                <button class="tab-btn" data-lang="js">JavaScript</button>
+              </div>
+            </div>
+            
+            <!-- Code Display Area -->
+            <div class="uiverse-code-wrapper">
+              <pre><code id="codeDisplay"></code></pre>
+            </div>
+            
+            <!-- Copy Button Footer -->
+            <div class="uiverse-code-box-footer">
+              <span id="copyNotice">Nusxalandi! ✅</span>
+              <button
+                class="uiverse-copy-btn"
+                id="modalCopyBtn"
+              >
+                Nusxalash
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

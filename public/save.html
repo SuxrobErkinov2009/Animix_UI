@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./main.css" />
+    <link rel="stylesheet" href="./save.css" />
+    <title>Saqlangan Neon Elementlar - Animix UI</title>
+  </head>
+  <body>
+    <div class="dashboard-root">
+      <header class="header">
+        <div class="container">
+          <div class="header__wrapper">
+            <div class="header__logo">
+              <h1
+                style="
+                  color: #00f3ff;
+                  font-family: sans-serif;
+                  text-shadow: 0 0 10px #00f3ff;
+                  margin: 0;
+                "
+              >
+                Animix UI
+              </h1>
+            </div>
+            <div class="header__actions">
+              <button
+                class="create-neon-btn"
+                onclick="window.location.href = 'index.html'"
+              >
+                Bosh sahifaga qaytish
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="content__header">
+          <h2
+            style="
+              color: #00ff99;
+              text-shadow: 0 0 15px rgba(0, 255, 153, 0.4);
+              margin: 0 0 8px 0;
+            "
+          >
+            Siz Saqlagan Neon Elementlar
+          </h2>
+          <p style="margin: 0; color: #72789f">
+            O'zingizga yoqqan va keyinchalik ishlatish uchun olib qo'ygan
+            elementlaringiz jamlanmasi.
+          </p>
+        </div>
+
+        <div class="elements__grid" id="savedElementsGrid"></div>
+      </main>
+    </div>
+
+    <div class="modal-overlay" id="codeModal">
+      <div class="uiverse-modal">
+        <div class="uiverse-modal__header">
+          <h3>Element Kodlari</h3>
+          <button class="close-modal-btn" id="closeCodeBtn">&times;</button>
+        </div>
+
+        <div class="uiverse-modal__body">
+          <div class="uiverse-modal__preview-box">
+            <div id="modalElementPreview"></div>
+          </div>
+
+          <div class="uiverse-modal__code-box">
+            <div class="uiverse-tabs">
+              <div style="display: flex; gap: 5px">
+                <button class="tab-btn active" data-lang="html">HTML</button>
+                <button class="tab-btn" data-lang="css">CSS</button>
+                <button class="tab-btn" data-lang="js">JavaScript</button>
+              </div>
+            </div>
+
+            <div class="uiverse-code-wrapper">
+              <pre><code id="codeDisplay"></code></pre>
+            </div>
+
+            <div class="uiverse-code-box-footer">
+              <span id="copyNotice">Nusxalandi! ✅</span>
+              <button class="uiverse-copy-btn" id="modalCopyBtn">
+                Nusxalash
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./save.js"></script>
+  </body>
+</html>

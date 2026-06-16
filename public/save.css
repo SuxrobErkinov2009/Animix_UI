@@ -1,0 +1,334 @@
+.main-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.elements__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.element-card {
+  background: #0b0d1b;
+  border: 2px solid #252a54;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 280px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.element-card:hover {
+  border-color: #00f3ff;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+  transform: translateY(-5px);
+}
+
+.element-preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #040510;
+  padding: 20px;
+  overflow: auto;
+}
+
+.element-footer {
+  background: #0b0d1b;
+  border-top: 2px solid #252a54;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-card-btn {
+  background: transparent;
+  color: #ff007c;
+  border: 1.5px solid #ff007c;
+  padding: 8px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.delete-card-btn:hover {
+  background: #ff007c;
+  color: #fff;
+  box-shadow: 0 0 10px #ff007c;
+}
+
+.copy-btn {
+  background: #141833;
+  border: 2px solid #2e3566;
+  color: #00f3ff;
+  padding: 8px 15px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.copy-btn:hover {
+  background: #00f3ff;
+  color: #000;
+  box-shadow: 0 0 15px #00f3ff;
+}
+
+.uiverse-modal {
+  background: #0b0d1b;
+  border: 2.5px solid #00f3ff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 1000px;
+  height: 80vh;
+  max-height: 650px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 50px rgba(0, 243, 255, 0.3);
+  overflow: hidden;
+}
+
+.uiverse-modal__header {
+  padding: 20px 30px;
+  border-bottom: 2px solid #252a54;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0e1124;
+}
+
+.uiverse-modal__header h3 {
+  color: #00f3ff;
+  font-size: 22px;
+  font-weight: 800;
+  text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+  margin: 0;
+}
+
+.close-modal-btn {
+  background: transparent;
+  border: none;
+  color: #72789f;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-modal-btn:hover {
+  color: #ff007c;
+}
+
+.uiverse-modal__body {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  flex: 1;
+  overflow: hidden;
+}
+
+.uiverse-modal__preview-box {
+  background: #040510;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px solid #252a54;
+  padding: 20px;
+  overflow: auto;
+}
+
+.uiverse-modal__code-box {
+  display: flex;
+  flex-direction: column;
+  background: #060713;
+  height: 100%;
+  overflow: hidden;
+}
+
+.uiverse-tabs {
+  display: flex;
+  background: #0b0d1b;
+  border-bottom: 2px solid #252a54;
+  padding: 0 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #a2aabf;
+  padding: 18px 20px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+  color: #ff007c;
+  border-bottom-color: #ff007c;
+}
+
+.uiverse-code-wrapper {
+  flex: 1;
+  padding: 20px;
+  background: #010206;
+  overflow: auto;
+}
+
+.uiverse-code-wrapper pre {
+  margin: 0;
+}
+
+.uiverse-code-wrapper pre code {
+  color: #00ff99;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.uiverse-code-box-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  background: #0b0d1b;
+  border-top: 2px solid #252a54;
+  flex-shrink: 0;
+}
+
+.uiverse-copy-btn {
+  background: #141833;
+  border: 2px solid #00f3ff;
+  color: #00f3ff;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.uiverse-copy-btn:hover {
+  background: #00f3ff;
+  color: #000;
+  box-shadow: 0 0 15px #00f3ff;
+}
+
+#copyNotice {
+  color: #00ff99;
+  font-weight: bold;
+  font-size: 13px;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .uiverse-modal {
+    height: 85vh;
+    max-height: 580px;
+  }
+
+  .uiverse-modal__header {
+    padding: 15px 20px;
+  }
+
+  .uiverse-modal__header h3 {
+    font-size: 18px;
+  }
+
+  .uiverse-modal__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .uiverse-modal__preview-box {
+    height: 160px;
+    border-right: none;
+    border-bottom: 2px solid #252a54;
+  }
+
+  .uiverse-modal__code-box {
+    height: calc(100% - 160px);
+  }
+
+  .tab-btn {
+    padding: 12px 15px;
+    font-size: 13px;
+  }
+
+  .uiverse-code-wrapper {
+    padding: 15px;
+  }
+
+  .uiverse-code-wrapper pre code {
+    font-size: 12px;
+  }
+
+  .uiverse-code-box-footer {
+    padding: 12px 15px;
+    justify-content: center;
+  }
+
+  .uiverse-copy-btn {
+    width: 100%;
+    max-width: 280px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__wrapper {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .header__logo h1 {
+    font-size: 20px !important;
+  }
+
+  .create-neon-btn {
+    width: auto !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .uiverse-modal__header h3 {
+    font-size: 16px;
+  }
+
+  .uiverse-modal__preview-box {
+    height: 130px;
+  }
+
+  .uiverse-modal__code-box {
+    height: calc(100% - 130px);
+  }
+
+  .tab-btn {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .uiverse-code-wrapper pre code {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .uiverse-copy-btn {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Control Panel - Animix UI</title>
+    <link rel="stylesheet" href="./dashboard.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <header class="admin-header">
+        <div class="admin-header__logo">
+          <span class="logo-neon">Animix UI</span>
+          <span class="badge">ADMIN</span>
+        </div>
+        <div class="admin-header__actions">
+          <button
+            class="edit-mode-btn"
+            onclick="window.location.href = 'index.html?mode=admin'"
+          >
+            Tahrirlash 🛠️
+          </button>
+        </div>
+      </header>
+
+      <main class="admin-workspace">
+        <div class="workspace-card">
+          <div class="workspace-card__title">
+            <h2>Yangi Element Yaratish Boshqaruvi</h2>
+            <p>Tizimga yangi neon komponent qo'shish uchun kodlarni kiriting</p>
+          </div>
+
+          <form id="adminCreateForm" class="workspace-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="adminElName">Element Nomi</label>
+                <input
+                  type="text"
+                  id="adminElName"
+                  placeholder="Masalan: Neon Pulsar Button"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="adminElCategory">Kategoriya turi</label>
+                <select id="adminElCategory" required>
+                  <option value="button">🔘 Buttonlar</option>
+                  <option value="loader">⏳ Loaderlar</option>
+                  <option value="input">⌨️ Inputlar</option>
+                  <option value="modal">🪟 Modallar</option>
+                  <option value="card">𗂂 Kartalar</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="code-editors-grid">
+              <div class="form-group">
+                <label class="label-html" for="adminElHtml"
+                  >HTML KODINI KIRITING</label
+                >
+                <textarea
+                  id="adminElHtml"
+                  placeholder="<button class='neon-btn'>PULSAR</button>"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="label-css" for="adminElCss"
+                  >CSS KODINI KIRITING</label
+                >
+                <textarea
+                  id="adminElCss"
+                  placeholder=".neon-btn {\n  background: #040510;\n  color: #00f3ff;\n}"
+                  required
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="label-js" for="adminElJs"
+                >JAVASCRIPT KODINI KIRITING (IXTIYORIY)</label
+              >
+              <textarea
+                id="adminElJs"
+                class="js-editor"
+                placeholder="// JavaScript mantiqini bu yerga yozing... \n// Masalan: container.querySelector('button').addEventListener(...)"
+              ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="add-component-btn">
+                Elementni Ro'yxatga Qo'shish ✨
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="./dashboard.js"></script>
+  </body>
+</html>
