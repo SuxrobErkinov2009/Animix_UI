@@ -327,9 +327,8 @@ function checkSession() {
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
   const currentFilename = window.location.pathname.split("/").pop();
 
-  // 1. Agar foydalanuvchi tizimga kirmagan bo'lsa
+  // 1. Agar foydalanuvchi tizimga mutlaqo kirmagan bo'lsa
   if (!sessionUser) {
-    // Agar u dashboard.html sahifasida bo'lsa, uni shafqatsizlarcha index.html ga haydaymiz!
     if (currentFilename === "dashboard.html") {
       window.location.href = "index.html";
       return;
@@ -338,32 +337,34 @@ function checkSession() {
     if (landingPage) landingPage.style.display = "flex";
     if (mainDashboard) mainDashboard.style.display = "none";
     if (headerSaveBtn) headerSaveBtn.style.display = "none";
+
+    // O'G'RILIKDAN HIMOYA: Agar foydalanuvchi kirmagan bo'lsa, tugmani aniq yashiramiz!
     if (openCreateModalBtn) openCreateModalBtn.style.display = "none";
-    return; // Funksiyani shu yerda to'xtatamiz
+    return;
   }
 
   // 2. Agar foydalanuvchi tizimga kirgan bo'lsa, lekin u ADMIN bo'lmasa
   const isRealAdmin = sessionUser.email === "suxroberkinov438@gmail.com";
 
   if (currentFilename === "dashboard.html" && !isRealAdmin) {
-    // Oddiy foydalanuvchi dashboard.html ga kirishga urinsa, uni ham index.html ga haydaymiz!
     window.location.href = "index.html";
     return;
   }
 
-  // 3. Agar hamma tekshiruvlardan muvaffaqiyatli o'tsa, sahifani ko'rsatamiz
+  // 3. Agar hamma tekshiruvlardan muvaffaqiyatli o'tsa, asosiy oynalarni ochamiz
   if (landingPage) landingPage.style.display = "none";
   if (mainDashboard) mainDashboard.style.display = "block";
   if (headerSaveBtn) headerSaveBtn.style.display = "inline-block";
 
+  // 🔒 TUGMANI FAQAT VA FAQAT ASIL ADMIN UCHUN KO'RSATISH MANTIQI:
   if (openCreateModalBtn) {
     if (isRealAdmin) {
-      openCreateModalBtn.style.display = "inline-block";
+      openCreateModalBtn.style.display = "inline-block"; // Faqat Suxrobga ko'rinadi
       openCreateModalBtn.onclick = () => {
         window.location.href = "dashboard.html";
       };
     } else {
-      openCreateModalBtn.style.display = "none";
+      openCreateModalBtn.style.display = "none"; // Oddiy kirgan foydalanuvchilarga ham yashiriladi!
     }
   }
 
@@ -380,14 +381,6 @@ function checkSession() {
   const savedIndex = localStorage.getItem("activeMenuIndex");
   updateContent(savedIndex !== null ? parseInt(savedIndex) : 0);
 }
-
-profilKonteyner?.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if (profileDropdown) {
-    profileDropdown.style.display =
-      profileDropdown.style.display === "block" ? "none" : "block";
-  }
-});
 
 document.addEventListener("click", () => {
   if (profileDropdown) profileDropdown.style.display = "none";
