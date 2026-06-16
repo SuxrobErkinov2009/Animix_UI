@@ -9,10 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PUBLIC_PATH = path.join(__dirname, "public");
-app.use(express.static(PUBLIC_PATH));
-
-// Sening MongoDB Atlas bulutli baza ulanish koding muhrlandi!
+// MongoDB Atlas ulanishi
 const MONGO_URI =
   "mongodb+srv://suxroberkinov438_db_user:g7H0iKjPZS5zS4oc@animixcluster.gk2nwfg.mongodb.net/animixDB?retryWrites=true&w=majority&appName=AnimixCluster";
 
@@ -21,6 +18,7 @@ mongoose
   .then(() => console.log("🔥 Global MongoDB Atlas muvaffaqiyatli ulandi!"))
   .catch((err) => console.error("❌ Bazaga ulanishda xatolik:", err));
 
+// Sxemalar
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true, trim: true },
   email: { type: String, required: true, unique: true, trim: true },
@@ -45,17 +43,17 @@ const elementSchema = new mongoose.Schema({
 });
 const Element = mongoose.model("Element", elementSchema);
 
+// --- API ROUTES ---
+
 app.post("/api/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    if (!username || !email || !password) {
+    if (!username || !email || !password)
       return res.status(400).json({ error: "Barcha maydonlarni to'ldiring!" });
-    }
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) {
+    if (existingUser)
       return res.status(400).json({ error: "Bu username yoki email band!" });
-    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
@@ -75,19 +73,15 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-
     const user = await User.findOne({
       $or: [{ username: username }, { email: username }],
     });
 
-    if (!user) {
+    if (!user)
       return res.status(400).json({ error: "Foydalanuvchi topilmadi!" });
-    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Parol noto'g'ri!" });
-    }
+    if (!isMatch) return res.status(400).json({ error: "Parol noto'g'ri!" });
 
     res.json({
       message: "Xush kelibsiz!",
@@ -111,14 +105,11 @@ app.get("/api/elements", async (req, res) => {
 app.post("/api/elements", async (req, res) => {
   try {
     const { name, category, html, css, js, email } = req.body;
-
-    if (email !== "suxroberkinov438@gmail.com") {
+    if (email !== "suxroberkinov438@gmail.com")
       return res.status(403).json({ error: "Sizda huquq yo'q!" });
-    }
 
     const newElement = new Element({ name, category, html, css, js: js || "" });
     await newElement.save();
-
     res
       .status(201)
       .json({ message: "Yangi komponent saqlandi!", element: newElement });
@@ -131,10 +122,8 @@ app.delete("/api/elements/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { email } = req.body;
-
-    if (email !== "suxroberkinov438@gmail.com") {
+    if (email !== "suxroberkinov438@gmail.com")
       return res.status(403).json({ error: "Sizda huquq yo'q!" });
-    }
 
     await Element.findByIdAndDelete(id);
     res.json({ message: "Element o'chirildi!" });
@@ -143,50 +132,10 @@ app.delete("/api/elements/:id", async (req, res) => {
   }
 });
 
-app.get("/api/saved", async (req, res) => {
-  try {
-    const userEmail = req.query.email;
-    if (!userEmail) return res.status(400).json({ error: "Email kerak." });
-
-    const user = await User.findOne({ email: userEmail }).populate(
-      "savedElements",
-    );
-    if (!user)
-      return res.status(404).json({ error: "Foydalanuvchi topilmadi." });
-
-    res.json(user.savedElements);
-  } catch (error) {
-    res.status(500).json({ error: "Yuklashda xatolik." });
-  }
-});
-
-app.post("/api/saved/toggle", async (req, res) => {
-  try {
-    const { email, elementId } = req.body;
-    if (!email || !elementId)
-      return res.status(400).json({ error: "Ma'lumotlar chala!" });
-
-    const user = await User.findOne({ email });
-    if (!user)
-      return res.status(404).json({ error: "Foydalanuvchi topilmadi." });
-
-    const elementIndex = user.savedElements.indexOf(elementId);
-
-    let message = "";
-    if (elementIndex === -1) {
-      user.savedElements.push(elementId);
-      message = "Element profilingizga saqlandi!";
-    } else {
-      user.savedElements.splice(elementIndex, 1);
-      message = "Element saqlanganlardan olib tashlandi.";
-    }
-
-    await user.save();
-    res.json({ message, savedElements: user.savedElements });
-  } catch (error) {
-    res.status(500).json({ error: "Serverda xatolik." });
-  }
-});
+// --- STATIC ASSETS & FRONTEND PAGES ---
+// Render xostingida fayllar to'g'ri ochilishi uchun static assetlar eng pastda yuklanadi
+const PUBLIC_PATH = path.join(__dirname, "public");
+app.use(express.static(PUBLIC_PATH));
 
 app.get("/dashboard.html", (req, res) =>
   res.sendFile(path.join(PUBLIC_PATH, "dashboard.html")),
@@ -194,15 +143,12 @@ app.get("/dashboard.html", (req, res) =>
 app.get("/save.html", (req, res) =>
   res.sendFile(path.join(PUBLIC_PATH, "save.html")),
 );
+
+// Agar yuqoridagilardan boshqa URL yozilsa (va u api bo'lmasa) index.html ochiladi
 app.get(/^\/(?!api).*/, (req, res) =>
   res.sendFile(path.join(PUBLIC_PATH, "index.html")),
 );
 
-app.get("/", (req, res) => {
-  res.send("🚀 Animix API muvaffaqiyatli ishlamoqda!");
-});
-
-// Global xostinglar uchun port sozlamasi dinamik qilindi
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port: ${PORT}`);

@@ -2,7 +2,7 @@ let currentActiveElement = null;
 let currentActiveLang = "html";
 let authMode = "login";
 
-let uiElements = [];
+let uiElements = []; // Baza elementlari shu yerga tushadi
 
 const menuStyles = [
   {
@@ -86,22 +86,41 @@ const logoutBtn = document.getElementById("logoutBtn");
 const modalSaveBtn = document.getElementById("modalSaveBtn");
 const copyNotice = document.getElementById("copyNotice");
 
+// API orqali elementlarni bazadan yuklash funksiyasi
+async function loadElementsFromServer() {
+  try {
+    const response = await fetch("/api/elements");
+    if (response.ok) {
+      uiElements = await response.json();
+      const activeIndex = parseInt(
+        localStorage.getItem("activeMenuIndex") || "0",
+      );
+      renderElements(
+        menuStyles[activeIndex].key,
+        searchInput ? searchInput.value : "",
+      );
+    }
+  } catch (err) {
+    console.error("Elementlarni yuklashda xatolik:", err);
+  }
+}
+
 function openAuth(mode) {
   authMode = mode;
-  authError.style.display = "none";
-  authForm.reset();
+  if (authError) authError.style.display = "none";
+  authForm?.reset();
 
   const existingConfirmField = document.getElementById("confirmPasswordGroup");
   if (existingConfirmField) existingConfirmField.remove();
 
   if (mode === "login") {
-    authModalTitle.innerText = "Tizimga Kirish";
-    authSubmitBtn.innerText = "Kirish";
+    if (authModalTitle) authModalTitle.innerText = "Tizimga Kirish";
+    if (authSubmitBtn) authSubmitBtn.innerText = "Kirish";
     if (authEmailGroup) authEmailGroup.style.display = "none";
     if (authEmailInput) authEmailInput.required = false;
   } else {
-    authModalTitle.innerText = "Yangi Hisob Yaratish";
-    authSubmitBtn.innerText = "Hisob yaratish ✨";
+    if (authModalTitle) authModalTitle.innerText = "Yangi Hisob Yaratish";
+    if (authSubmitBtn) authSubmitBtn.innerText = "Hisob yaratish ✨";
     if (authEmailGroup) authEmailGroup.style.display = "block";
     if (authEmailInput) authEmailInput.required = true;
 
@@ -112,9 +131,9 @@ function openAuth(mode) {
       <label for="authConfirmPassword">Parolni tasdiqlang</label>
       <input type="password" id="authConfirmPassword" required />
     `;
-    authForm.insertBefore(confirmGroup, authError);
+    if (authForm && authError) authForm.insertBefore(confirmGroup, authError);
   }
-  authModal.classList.add("active");
+  authModal?.classList.add("active");
 }
 
 document
@@ -128,7 +147,7 @@ document
   ?.addEventListener("click", () => openAuth("login"));
 document
   .getElementById("closeAuthBtn")
-  ?.addEventListener("click", () => authModal.classList.remove("active"));
+  ?.addEventListener("click", () => authModal?.classList.remove("active"));
 
 authForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -141,7 +160,7 @@ authForm?.addEventListener("submit", async (e) => {
       email: "suxroberkinov438@gmail.com",
     };
     localStorage.setItem("activeUser", JSON.stringify(adminData));
-    authModal.classList.remove("active");
+    authModal?.classList.remove("active");
     window.location.href = "dashboard.html";
     return;
   }
@@ -151,8 +170,10 @@ authForm?.addEventListener("submit", async (e) => {
       "authConfirmPassword",
     )?.value;
     if (password !== confirmPassword) {
-      authError.innerText = "Kiritilgan parollar bir-biriga mos kelmadi! ❌";
-      authError.style.display = "block";
+      if (authError) {
+        authError.innerText = "Kiritilgan parollar bir-biriga mos kelmadi! ❌";
+        authError.style.display = "block";
+      }
       return;
     }
   }
@@ -173,8 +194,10 @@ authForm?.addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (!response.ok) {
-      authError.innerText = data.error || "Xatolik yuz berdi!";
-      authError.style.display = "block";
+      if (authError) {
+        authError.innerText = data.error || "Xatolik yuz berdi!";
+        authError.style.display = "block";
+      }
       return;
     }
 
@@ -183,7 +206,7 @@ authForm?.addEventListener("submit", async (e) => {
         "activeUser",
         JSON.stringify({ username: data.username, email: data.email || "" }),
       );
-      authModal.classList.remove("active");
+      authModal?.classList.remove("active");
       checkSession();
     } else {
       alert(
@@ -196,7 +219,7 @@ authForm?.addEventListener("submit", async (e) => {
       "activeUser",
       JSON.stringify({ username: username, email: "user@example.com" }),
     );
-    authModal.classList.remove("active");
+    authModal?.classList.remove("active");
     checkSession();
   }
 });
@@ -207,7 +230,6 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
 
   const urlParams = new URLSearchParams(window.location.search);
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
-
   const isAdminMode =
     urlParams.get("mode") === "admin" &&
     sessionUser &&
@@ -218,15 +240,11 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
   );
   const isSavedPage = categoryFilter === "saved" || activeMenuIndex === 5;
 
-  const customElements =
-    JSON.parse(localStorage.getItem("customUiElements")) || [];
-  const allCurrentElements = [...uiElements, ...customElements];
-
   let displayElements = [];
   if (isSavedPage) {
     displayElements = JSON.parse(localStorage.getItem("savedElements")) || [];
   } else {
-    displayElements = allCurrentElements.filter(
+    displayElements = uiElements.filter(
       (item) =>
         item.category === categoryFilter &&
         item.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -241,7 +259,7 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
   displayElements.forEach((item) => {
     const card = document.createElement("div");
     card.className = "element-card";
-    const uniqueCardId = "card_preview_" + item.id;
+    const uniqueCardId = "card_preview_" + item._id; // MongoDB ID-si ishlatiladi
 
     let leftButtonHtml = "";
     if (isAdminMode) {
@@ -283,23 +301,25 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
       .addEventListener("click", () => openCodeModal(item));
 
     if (isAdminMode) {
-      card.querySelector(".admin-delete-btn")?.addEventListener("click", () => {
-        let currentCustoms =
-          JSON.parse(localStorage.getItem("customUiElements")) || [];
-        currentCustoms = currentCustoms.filter((el) => el.id !== item.id);
-        localStorage.setItem(
-          "customUiElements",
-          JSON.stringify(currentCustoms),
-        );
-
-        let savedItems =
-          JSON.parse(localStorage.getItem("savedElements")) || [];
-        savedItems = savedItems.filter((el) => el.id !== item.id);
-        localStorage.setItem("savedElements", JSON.stringify(savedItems));
-
-        alert("Element muvaffaqiyatli o'chirildi! 🗑️");
-        renderElements(categoryFilter, searchQuery);
-      });
+      card
+        .querySelector(".admin-delete-btn")
+        ?.addEventListener("click", async () => {
+          if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
+            try {
+              const response = await fetch(`/api/elements/${item._id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: sessionUser.email }),
+              });
+              if (response.ok) {
+                alert("Element muvaffaqiyatli o'chirildi! 🗑️");
+                loadElementsFromServer();
+              }
+            } catch (err) {
+              alert("Xatolik yuz berdi");
+            }
+          }
+        });
     } else {
       if (isSavedPage) {
         card
@@ -318,7 +338,6 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
         saveBtn?.addEventListener("click", () => toggleSaveElement(item));
       }
     }
-
     elementsGrid.appendChild(card);
   });
 }
@@ -327,23 +346,18 @@ function checkSession() {
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
   const currentFilename = window.location.pathname.split("/").pop();
 
-  // 1. Agar foydalanuvchi tizimga mutlaqo kirmagan bo'lsa
   if (!sessionUser) {
     if (currentFilename === "dashboard.html") {
       window.location.href = "index.html";
       return;
     }
-
     if (landingPage) landingPage.style.display = "flex";
     if (mainDashboard) mainDashboard.style.display = "none";
     if (headerSaveBtn) headerSaveBtn.style.display = "none";
-
-    // O'G'RILIKDAN HIMOYA: Agar foydalanuvchi kirmagan bo'lsa, tugmani aniq yashiramiz!
     if (openCreateModalBtn) openCreateModalBtn.style.display = "none";
     return;
   }
 
-  // 2. Agar foydalanuvchi tizimga kirgan bo'lsa, lekin u ADMIN bo'lmasa
   const isRealAdmin = sessionUser.email === "suxroberkinov438@gmail.com";
 
   if (currentFilename === "dashboard.html" && !isRealAdmin) {
@@ -351,20 +365,19 @@ function checkSession() {
     return;
   }
 
-  // 3. Agar hamma tekshiruvlardan muvaffaqiyatli o'tsa, asosiy oynalarni ochamiz
   if (landingPage) landingPage.style.display = "none";
   if (mainDashboard) mainDashboard.style.display = "block";
   if (headerSaveBtn) headerSaveBtn.style.display = "inline-block";
 
-  // 🔒 TUGMANI FAQAT VA FAQAT ASIL ADMIN UCHUN KO'RSATISH MANTIQI:
+  // 🔒 KO'RINIShNI FAQAT ASIL ADMINGA CHIKARISh
   if (openCreateModalBtn) {
     if (isRealAdmin) {
-      openCreateModalBtn.style.display = "inline-block"; // Faqat Suxrobga ko'rinadi
+      openCreateModalBtn.style.display = "inline-block";
       openCreateModalBtn.onclick = () => {
         window.location.href = "dashboard.html";
       };
     } else {
-      openCreateModalBtn.style.display = "none"; // Oddiy kirgan foydalanuvchilarga ham yashiriladi!
+      openCreateModalBtn.style.display = "none";
     }
   }
 
@@ -382,18 +395,14 @@ function checkSession() {
   updateContent(savedIndex !== null ? parseInt(savedIndex) : 0);
 }
 
-document.addEventListener("click", () => {
-  if (profileDropdown) profileDropdown.style.display = "none";
-});
-
-logoutBtn?.addEventListener("click", () => {
+document.getElementById("logoutBtn")?.addEventListener("click", () => {
   localStorage.removeItem("activeUser");
   window.location.reload();
 });
 
 function toggleSaveElement(item) {
   let savedItems = JSON.parse(localStorage.getItem("savedElements")) || [];
-  const index = savedItems.findIndex((el) => el.id === item.id);
+  const index = savedItems.findIndex((el) => el._id === item._id);
 
   if (index === -1) {
     savedItems.push(item);
@@ -414,20 +423,15 @@ function toggleSaveElement(item) {
 function openCodeModal(item) {
   currentActiveElement = item;
   currentActiveLang = "html";
-
   tabButtons.forEach((btn) => btn.classList.remove("active"));
   const initialActiveTab = document.querySelector(
     ".uiverse-tabs [data-lang='html']",
   );
   if (initialActiveTab) initialActiveTab.classList.add("active");
 
-  if (modalElementPreview) {
+  if (modalElementPreview)
     modalElementPreview.innerHTML = `${item.html}<style>${item.css || ""}</style>`;
-  }
-  if (codeDisplay) {
-    codeDisplay.innerText = item.html || "HTML kod mavjud emas";
-  }
-
+  if (codeDisplay) codeDisplay.innerText = item.html || "HTML kod xato";
   if (copyNotice) copyNotice.style.display = "none";
   codeModal?.classList.add("active");
 }
@@ -436,40 +440,27 @@ tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
     if (!currentActiveElement) return;
     const lang = button.getAttribute("data-lang");
-    if (!lang) return;
-
     tabButtons.forEach((btn) => btn.classList.remove("active"));
     button.classList.add("active");
-
     currentActiveLang = lang;
-    if (codeDisplay) {
-      codeDisplay.innerText = currentActiveElement[lang] || "Kod mavjud emas";
-    }
-    if (copyNotice) copyNotice.style.display = "none";
+    if (codeDisplay)
+      codeDisplay.innerText = currentActiveElement[lang] || "Kod yo'q";
   });
 });
 
 modalCopyBtn?.addEventListener("click", () => {
   if (!currentActiveElement) return;
-  const codeText = currentActiveElement[currentActiveLang] || "";
-
-  navigator.clipboard.writeText(codeText).then(() => {
-    if (copyNotice) {
-      copyNotice.style.display = "inline-block";
-      setTimeout(() => {
-        if (copyNotice) copyNotice.style.display = "none";
-      }, 2000);
-    }
-  });
+  navigator.clipboard
+    .writeText(currentActiveElement[currentActiveLang] || "")
+    .then(() => {
+      if (copyNotice) {
+        copyNotice.style.display = "inline-block";
+        setTimeout(() => {
+          if (copyNotice) copyNotice.style.display = "none";
+        }, 2000);
+      }
+    });
 });
-
-modalSaveBtn?.addEventListener("click", () => {
-  if (currentActiveElement) toggleSaveElement(currentActiveElement);
-});
-
-closeCodeBtn?.addEventListener("click", () =>
-  codeModal?.classList.remove("active"),
-);
 
 function updateContent(index) {
   sidebarItems.forEach((el, idx) => {
@@ -484,7 +475,6 @@ function updateContent(index) {
     sidebarItems[index].innerText = menuStyles[index].activeText;
     if (contentTitle) contentTitle.innerText = menuStyles[index].title;
     if (contentDesc) contentDesc.innerText = menuStyles[index].desc;
-
     localStorage.setItem("activeMenuIndex", index);
     renderElements(menuStyles[index].key, searchInput ? searchInput.value : "");
   }
@@ -499,31 +489,10 @@ sidebarItems.forEach((item, index) => {
 
 searchInput?.addEventListener("input", (e) => {
   const activeIndex = parseInt(localStorage.getItem("activeMenuIndex") || "0");
-  if (menuStyles[activeIndex]) {
-    renderElements(menuStyles[activeIndex].key, e.target.value);
-  }
+  renderElements(menuStyles[activeIndex].key, e.target.value);
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   checkSession();
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
-  const isRealAdmin =
-    sessionUser && sessionUser.email === "suxroberkinov438@gmail.com";
-
-  // Agar URL'da ?mode=admin bo'lsa
-  if (urlParams.get("mode") === "admin") {
-    if (!isRealAdmin) {
-      // Hackerlik qilmoqchi bo'lgan odamni toza index.html ga otib yuboramiz
-      window.location.href = "index.html";
-      return;
-    }
-
-    const activeIndex = parseInt(
-      localStorage.getItem("activeMenuIndex") || "0",
-    );
-    const categories = ["button", "loader", "input", "modal", "card", "saved"];
-    renderElements(categories[activeIndex], "");
-  }
+  loadElementsFromServer(); // Sayt ochilganda serverdan ma'lumotlarni tortish
 });
