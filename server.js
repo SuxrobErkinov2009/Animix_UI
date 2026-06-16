@@ -198,6 +198,10 @@ app.get(/^\/(?!api).*/, (req, res) =>
   res.sendFile(path.join(PUBLIC_PATH, "index.html")),
 );
 
+app.get("/", (req, res) => {
+  res.send("🚀 Animix API muvaffaqiyatli ishlamoqda!");
+});
+
 // Global xostinglar uchun port sozlamasi dinamik qilindi
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
