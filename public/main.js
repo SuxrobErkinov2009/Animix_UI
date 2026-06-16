@@ -1,8 +1,7 @@
 let currentActiveElement = null;
 let currentActiveLang = "html";
 let authMode = "login";
-
-let uiElements = []; // Baza elementlari shu yerga tushadi
+let uiElements = [];
 
 const menuStyles = [
   {
@@ -86,7 +85,6 @@ const logoutBtn = document.getElementById("logoutBtn");
 const modalSaveBtn = document.getElementById("modalSaveBtn");
 const copyNotice = document.getElementById("copyNotice");
 
-// API orqali elementlarni bazadan yuklash funksiyasi
 async function loadElementsFromServer() {
   try {
     const response = await fetch("/api/elements");
@@ -101,7 +99,7 @@ async function loadElementsFromServer() {
       );
     }
   } catch (err) {
-    console.error("Elementlarni yuklashda xatolik:", err);
+    console.error(err);
   }
 }
 
@@ -259,7 +257,7 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
   displayElements.forEach((item) => {
     const card = document.createElement("div");
     card.className = "element-card";
-    const uniqueCardId = "card_preview_" + item._id; // MongoDB ID-si ishlatiladi
+    const uniqueCardId = "card_preview_" + item._id;
 
     let leftButtonHtml = "";
     if (isAdminMode) {
@@ -312,11 +310,11 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
                 body: JSON.stringify({ email: sessionUser.email }),
               });
               if (response.ok) {
-                alert("Element muvaffaqiyatli o'chirildi! 🗑️");
+                alert("Element o'chirildi!");
                 loadElementsFromServer();
               }
             } catch (err) {
-              alert("Xatolik yuz berdi");
+              console.error(err);
             }
           }
         });
@@ -369,7 +367,6 @@ function checkSession() {
   if (mainDashboard) mainDashboard.style.display = "block";
   if (headerSaveBtn) headerSaveBtn.style.display = "inline-block";
 
-  // 🔒 KO'RINIShNI FAQAT ASIL ADMINGA CHIKARISh
   if (openCreateModalBtn) {
     if (isRealAdmin) {
       openCreateModalBtn.style.display = "inline-block";
@@ -431,7 +428,7 @@ function openCodeModal(item) {
 
   if (modalElementPreview)
     modalElementPreview.innerHTML = `${item.html}<style>${item.css || ""}</style>`;
-  if (codeDisplay) codeDisplay.innerText = item.html || "HTML kod xato";
+  if (codeDisplay) codeDisplay.innerText = item.html || "Kod yo'q";
   if (copyNotice) copyNotice.style.display = "none";
   codeModal?.classList.add("active");
 }
@@ -494,5 +491,5 @@ searchInput?.addEventListener("input", (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   checkSession();
-  loadElementsFromServer(); // Sayt ochilganda serverdan ma'lumotlarni tortish
+  loadElementsFromServer();
 });
