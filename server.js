@@ -132,22 +132,30 @@ app.delete("/api/elements/:id", async (req, res) => {
   }
 });
 
-// --- STATIC ASSETS & FRONTEND PAGES ---
-// Render xostingida fayllar to'g'ri ochilishi uchun static assetlar eng pastda yuklanadi
-const PUBLIC_PATH = path.join(__dirname, "public");
-app.use(express.static(PUBLIC_PATH));
+// --- RENDER UCHUN RAKETA REJIMIDAGI STATIC ASSETS ---
+// Mana shu qism Render xostingida public papkasini mutlaqo xatosiz topishini kafolatlaydi
+const publicPath = path.resolve(__dirname, "public");
+app.use(express.static(publicPath));
 
-app.get("/dashboard.html", (req, res) =>
-  res.sendFile(path.join(PUBLIC_PATH, "dashboard.html")),
-);
-app.get("/save.html", (req, res) =>
-  res.sendFile(path.join(PUBLIC_PATH, "save.html")),
-);
+// Aniq marshrutlar (Explicit routing)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(publicPath, "index.html"));
+});
 
-// Agar yuqoridagilardan boshqa URL yozilsa (va u api bo'lmasa) index.html ochiladi
-app.get(/^\/(?!api).*/, (req, res) =>
-  res.sendFile(path.join(PUBLIC_PATH, "index.html")),
-);
+app.get("/dashboard.html", (req, res) => {
+  res.sendFile(path.join(publicPath, "dashboard.html"));
+});
+
+app.get("/save.html", (req, res) => {
+  res.sendFile(path.join(publicPath, "save.html"));
+});
+
+// Qolgan har qanday (api bo'lmagan) noto'g'ri url urilsa ham index.html ga qaytaradi (SPA fallback)
+app.get("*", (req, res) => {
+  if (!req.url.startsWith("/api")) {
+    res.sendFile(path.join(publicPath, "index.html"));
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
