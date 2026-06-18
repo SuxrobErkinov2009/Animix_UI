@@ -43,7 +43,7 @@ const elementSchema = new mongoose.Schema({
 });
 const Element = mongoose.model("Element", elementSchema);
 
-// --- API ROUTES ---
+// --- 1. API ROUTES (Bular har doim eng tepada turishi shart) ---
 
 app.post("/api/register", async (req, res) => {
   try {
@@ -132,16 +132,11 @@ app.delete("/api/elements/:id", async (req, res) => {
   }
 });
 
-// --- RENDER UCHUN RAKETA REJIMIDAGI STATIC ASSETS ---
-// Mana shu qism Render xostingida public papkasini mutlaqo xatosiz topishini kafolatlaydi
+// --- 2. STATIC ASSETS SETTINGS ---
 const publicPath = path.resolve(__dirname, "public");
 app.use(express.static(publicPath));
 
-// Aniq marshrutlar (Explicit routing)
-app.get("/", (req, res) => {
-  res.sendFile(path.join(publicPath, "index.html"));
-});
-
+// Aniq HTML sahifalar uchun yo'llar
 app.get("/dashboard.html", (req, res) => {
   res.sendFile(path.join(publicPath, "dashboard.html"));
 });
@@ -150,11 +145,10 @@ app.get("/save.html", (req, res) => {
   res.sendFile(path.join(publicPath, "save.html"));
 });
 
-// Qolgan har qanday (api bo'lmagan) noto'g'ri url urilsa ham index.html ga qaytaradi (SPA fallback)
+// --- 3. TO'G'RILANGAN FALLBACK (Eng oxirida bo'lishi shart!) ---
+// Hech qanday murakkab ifodalarsiz, to'g'ridan to'g'ri asosiy URL'ga yoki qolgan sahifalarga index.html ni beradi
 app.get("*", (req, res) => {
-  if (!req.url.startsWith("/api")) {
-    res.sendFile(path.join(publicPath, "index.html"));
-  }
+  res.sendFile(path.join(publicPath, "index.html"));
 });
 
 const PORT = process.env.PORT || 3000;
