@@ -3,7 +3,6 @@ let currentActiveLang = "html";
 let authMode = "login";
 let uiElements = [];
 
-// API uchun asosiy backend manzili (Render servering manzili)
 const BACKEND_URL = "https://animix-ui.onrender.com";
 
 const menuStyles = [
@@ -62,25 +61,21 @@ const authSubmitBtn = document.getElementById("authSubmitBtn");
 const authError = document.getElementById("authError");
 const authEmailGroup = document.getElementById("emailFormGroup");
 const authEmailInput = document.getElementById("authEmail");
-
 const sidebarItems = document.querySelectorAll(".sidebar__item");
 const contentTitle = document.querySelector(".content__header h2");
 const contentDesc = document.querySelector(".content__header p");
 const elementsGrid = document.getElementById("elementsGrid");
 const searchInput = document.getElementById("searchInput");
-
 const createModal = document.getElementById("createModal");
 const openCreateModalBtn = document.getElementById("openCreateModalBtn");
 const closeCreateBtn = document.getElementById("closeCreateBtn");
 const createElementForm = document.getElementById("createElementForm");
-
 const codeModal = document.getElementById("codeModal");
 const closeCodeBtn = document.getElementById("closeCodeBtn");
 const modalElementPreview = document.getElementById("modalElementPreview");
 const codeDisplay = document.getElementById("codeDisplay");
 const modalCopyBtn = document.getElementById("modalCopyBtn");
 const tabButtons = document.querySelectorAll(".uiverse-tabs .tab-btn");
-
 const headerSaveBtn = document.getElementById("headerSaveBtn");
 const profilKonteyner = document.getElementById("profil-konteyner");
 const profileDropdown = document.getElementById("profileDropdown");
@@ -88,10 +83,8 @@ const logoutBtn = document.getElementById("logoutBtn");
 const modalSaveBtn = document.getElementById("modalSaveBtn");
 const copyNotice = document.getElementById("copyNotice");
 
-// --- BACKENDDAN DATA YUKLASH ---
 async function loadElementsFromServer() {
   try {
-    // To'liq URL manziliga o'zgartirildi
     const response = await fetch(`${BACKEND_URL}/api/elements`);
     if (response.ok) {
       uiElements = await response.json();
@@ -108,7 +101,6 @@ async function loadElementsFromServer() {
   }
 }
 
-// --- ADMIN FORM: ELEMENT QO'SHISH INTEGRATSIYASI ---
 createElementForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -128,7 +120,6 @@ createElementForm?.addEventListener("submit", async (e) => {
   const payload = { name, category, html, css, js, email: sessionUser.email };
 
   try {
-    // To'liq URL manziliga o'zgartirildi
     const response = await fetch(`${BACKEND_URL}/api/elements`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -151,7 +142,6 @@ createElementForm?.addEventListener("submit", async (e) => {
   }
 });
 
-// --- MODAL BOSHQARIUVI ---
 openCreateModalBtn?.addEventListener("click", () =>
   createModal?.classList.add("active"),
 );
@@ -162,7 +152,6 @@ closeCodeBtn?.addEventListener("click", () =>
   codeModal?.classList.remove("active"),
 );
 
-// --- AUTH OYNASI ---
 function openAuth(mode) {
   authMode = mode;
   if (authError) authError.style.display = "none";
@@ -245,7 +234,6 @@ authForm?.addEventListener("submit", async (e) => {
         ? { username, password }
         : { username, email: emailVal, password };
 
-    // To'liq URL manziliga o'zgartirildi
     const response = await fetch(`${BACKEND_URL}${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -279,7 +267,6 @@ authForm?.addEventListener("submit", async (e) => {
   }
 });
 
-// --- COMPONENTLARNI RENDER QILISH ---
 function renderElements(categoryFilter = "button", searchQuery = "") {
   if (!elementsGrid) return;
   elementsGrid.innerHTML = "";
@@ -359,7 +346,6 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
         ?.addEventListener("click", async () => {
           if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
             try {
-              // To'liq URL manziliga o'zgartirildi
               const response = await fetch(
                 `${BACKEND_URL}/api/elements/${item._id}`,
                 {
@@ -399,7 +385,6 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
   });
 }
 
-// --- SESSIYANI TEKSHIRISH ---
 function checkSession() {
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
 

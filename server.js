@@ -9,7 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// MongoDB Atlas ulanishi
 const MONGO_URI =
   "mongodb+srv://suxroberkinov438_db_user:g7H0iKjPZS5zS4oc@animixcluster.gk2nwfg.mongodb.net/animixDB?retryWrites=true&w=majority&appName=AnimixCluster";
 
@@ -18,7 +17,6 @@ mongoose
   .then(() => console.log("🔥 Global MongoDB Atlas muvaffaqiyatli ulandi!"))
   .catch((err) => console.error("❌ Bazaga ulanishda xatolik:", err));
 
-// Sxemalar
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true, trim: true },
   email: { type: String, required: true, unique: true, trim: true },
@@ -30,7 +28,7 @@ const User = mongoose.model("User", userSchema);
 
 const elementSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
-  category: { type: String, required: true }, // Enum ba'zan chalkashlik yaratishi mumkin, vaqtincha oddiy String qildik
+  category: { type: String, required: true },
   html: { type: String, required: true },
   css: { type: String, required: true },
   js: { type: String, default: "" },
@@ -38,8 +36,6 @@ const elementSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 const Element = mongoose.model("Element", elementSchema);
-
-// --- API ROUTES ---
 
 app.post("/api/register", async (req, res) => {
   try {
@@ -128,7 +124,6 @@ app.delete("/api/elements/:id", async (req, res) => {
   }
 });
 
-// --- STATIC ASSETS (MUTLAQO TO'G'RI VARIANT) ---
 const publicPath = path.join(__dirname, "public");
 app.use(express.static(publicPath));
 
@@ -141,7 +136,6 @@ app.get("/save.html", (req, res) =>
   res.sendFile(path.join(publicPath, "save.html")),
 );
 
-// Har qanday boshqa so'rovda index.html ni yuklash
 app.get("*", (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });
