@@ -30,11 +30,7 @@ const User = mongoose.model("User", userSchema);
 
 const elementSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
-  category: {
-    type: String,
-    required: true,
-    enum: ["button", "loader", "input", "modal", "card"],
-  },
+  category: { type: String, required: true }, // Enum ba'zan chalkashlik yaratishi mumkin, vaqtincha oddiy String qildik
   html: { type: String, required: true },
   css: { type: String, required: true },
   js: { type: String, default: "" },
@@ -43,7 +39,7 @@ const elementSchema = new mongoose.Schema({
 });
 const Element = mongoose.model("Element", elementSchema);
 
-// --- 1. API ROUTES (Bular har doim eng tepada turishi shart) ---
+// --- API ROUTES ---
 
 app.post("/api/register", async (req, res) => {
   try {
@@ -132,21 +128,20 @@ app.delete("/api/elements/:id", async (req, res) => {
   }
 });
 
-// --- 2. STATIC ASSETS SETTINGS ---
-const publicPath = path.resolve(__dirname, "public");
+// --- STATIC ASSETS (MUTLAQO TO'G'RI VARIANT) ---
+const publicPath = path.join(__dirname, "public");
 app.use(express.static(publicPath));
 
-// Aniq HTML sahifalar uchun yo'llar
-app.get("/dashboard.html", (req, res) => {
-  res.sendFile(path.join(publicPath, "dashboard.html"));
-});
+// Frontend sahifalari
+app.get("/", (req, res) => res.sendFile(path.join(publicPath, "index.html")));
+app.get("/dashboard.html", (req, res) =>
+  res.sendFile(path.join(publicPath, "dashboard.html")),
+);
+app.get("/save.html", (req, res) =>
+  res.sendFile(path.join(publicPath, "save.html")),
+);
 
-app.get("/save.html", (req, res) => {
-  res.sendFile(path.join(publicPath, "save.html"));
-});
-
-// --- 3. TO'G'RILANGAN FALLBACK (Eng oxirida bo'lishi shart!) ---
-// Hech qanday murakkab ifodalarsiz, to'g'ridan to'g'ri asosiy URL'ga yoki qolgan sahifalarga index.html ni beradi
+// Har qanday boshqa so'rovda index.html ni yuklash
 app.get("*", (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });

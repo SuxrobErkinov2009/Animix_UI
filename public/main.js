@@ -3,6 +3,9 @@ let currentActiveLang = "html";
 let authMode = "login";
 let uiElements = [];
 
+// API uchun asosiy backend manzili (Render servering manzili)
+const BACKEND_URL = "https://animix-ui.onrender.com";
+
 const menuStyles = [
   {
     key: "button",
@@ -88,7 +91,8 @@ const copyNotice = document.getElementById("copyNotice");
 // --- BACKENDDAN DATA YUKLASH ---
 async function loadElementsFromServer() {
   try {
-    const response = await fetch("/api/elements");
+    // To'liq URL manziliga o'zgartirildi
+    const response = await fetch(`${BACKEND_URL}/api/elements`);
     if (response.ok) {
       uiElements = await response.json();
       const activeIndex = parseInt(
@@ -116,23 +120,16 @@ createElementForm?.addEventListener("submit", async (e) => {
 
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
 
-  // Server talab qilayotgan email tekshiruvi
   if (!sessionUser || sessionUser.email !== "suxroberkinov438@gmail.com") {
     alert("Sizda element qo'shish huquqi yo'q! Admin profil bilan kiring.");
     return;
   }
 
-  const payload = {
-    name,
-    category,
-    html,
-    css,
-    js,
-    email: sessionUser.email, // Server.js tekshiradigan maydon!
-  };
+  const payload = { name, category, html, css, js, email: sessionUser.email };
 
   try {
-    const response = await fetch("/api/elements", {
+    // To'liq URL manziliga o'zgartirildi
+    const response = await fetch(`${BACKEND_URL}/api/elements`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -143,11 +140,7 @@ createElementForm?.addEventListener("submit", async (e) => {
     if (response.ok) {
       alert("Element muvaffaqiyatli bazaga saqlandi va hammaga ko'rindi! 🎉");
       createElementForm.reset();
-
-      // Modal oynani yopish (agar modal bo'lsa)
       createModal?.classList.remove("active");
-
-      // Ro'yxatni backenddan qayta yuklash
       await loadElementsFromServer();
     } else {
       alert("Server xatoligi: " + (data.error || "Qo'shib bo'lmadi"));
@@ -251,7 +244,9 @@ authForm?.addEventListener("submit", async (e) => {
       authMode === "login"
         ? { username, password }
         : { username, email: emailVal, password };
-    const response = await fetch(endpoint, {
+
+    // To'liq URL manziliga o'zgartirildi
+    const response = await fetch(`${BACKEND_URL}${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -339,7 +334,6 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
       </div>
     `;
 
-    // JavaScript xavfsiz injeksiya
     if (item.js && item.js.trim() !== "") {
       setTimeout(() => {
         try {
@@ -365,11 +359,15 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
         ?.addEventListener("click", async () => {
           if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
             try {
-              const response = await fetch(`/api/elements/${item._id}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: sessionUser.email }),
-              });
+              // To'liq URL manziliga o'zgartirildi
+              const response = await fetch(
+                `${BACKEND_URL}/api/elements/${item._id}`,
+                {
+                  method: "DELETE",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email: sessionUser.email }),
+                },
+              );
               if (response.ok) {
                 alert("Element o'chirildi!");
                 await loadElementsFromServer();
