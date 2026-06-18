@@ -427,9 +427,14 @@ function checkSession() {
   updateContent(savedIndex !== null ? parseInt(savedIndex) : 0);
 }
 
-logoutBtn?.addEventListener("click", () => {
+logoutBtn?.addEventListener("click", (e) => {
+  e.stopPropagation();
   localStorage.removeItem("activeUser");
   window.location.reload();
+});
+
+profileDropdown?.addEventListener("click", (e) => {
+  e.stopPropagation();
 });
 
 function toggleSaveElement(item) {
