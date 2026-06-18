@@ -408,12 +408,19 @@ function checkSession() {
 
   if (profilKonteyner) {
     profilKonteyner.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.04); padding: 5px 15px; border-radius: 20px; border: 1px solid #00f3ff; box-shadow: 0 0 10px rgba(0, 243, 255, 0.25); cursor: pointer;">
+      <div id="profileTrigger" style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.04); padding: 5px 15px; border-radius: 20px; border: 1px solid #00f3ff; box-shadow: 0 0 10px rgba(0, 243, 255, 0.25); cursor: pointer;">
         <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${sessionUser.username}" alt="Avatar" style="width: 26px; height: 26px; border-radius: 50%; background: #0b0c10; border: 2px solid #ff007c;">
         <span style="color: #00ff99; font-weight: bold; font-size: 14px;">${sessionUser.username}</span>
         <span style="color: #72789f; font-size: 10px; margin-left: 2px;">▼</span>
       </div>
     `;
+
+    document
+      .getElementById("profileTrigger")
+      ?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        profileDropdown?.classList.toggle("active");
+      });
   }
 
   const savedIndex = localStorage.getItem("activeMenuIndex");
@@ -515,6 +522,10 @@ sidebarItems.forEach((item, index) => {
 searchInput?.addEventListener("input", (e) => {
   const activeIndex = parseInt(localStorage.getItem("activeMenuIndex") || "0");
   renderElements(menuStyles[activeIndex].key, e.target.value);
+});
+
+document.addEventListener("click", () => {
+  profileDropdown?.classList.remove("active");
 });
 
 document.addEventListener("DOMContentLoaded", () => {
