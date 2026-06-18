@@ -10,7 +10,8 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB Atlas ulanishi
-const MONGO_URI = "mongodb+srv://suxroberkinov438_db_user:g7H0iKjPZS5zS4oc@animixcluster.gk2nwfg.mongodb.net/animixDB?retryWrites=true&w=majority&appName=AnimixCluster";
+const MONGO_URI =
+  "mongodb+srv://suxroberkinov438_db_user:g7H0iKjPZS5zS4oc@animixcluster.gk2nwfg.mongodb.net/animixDB?retryWrites=true&w=majority&appName=AnimixCluster";
 
 mongoose
   .connect(MONGO_URI)
@@ -29,7 +30,7 @@ const User = mongoose.model("User", userSchema);
 
 const elementSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
-  category: { type: String, required: true },
+  category: { type: String, required: true }, // Enum ba'zan chalkashlik yaratishi mumkin, vaqtincha oddiy String qildik
   html: { type: String, required: true },
   css: { type: String, required: true },
   js: { type: String, default: "" },
@@ -43,13 +44,20 @@ const Element = mongoose.model("Element", elementSchema);
 app.post("/api/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    if (!username || !email || !password) return res.status(400).json({ error: "Barcha maydonlarni to'ldiring!" });
+    if (!username || !email || !password)
+      return res.status(400).json({ error: "Barcha maydonlarni to'ldiring!" });
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) return res.status(400).json({ error: "Bu username yoki email band!" });
+    if (existingUser)
+      return res.status(400).json({ error: "Bu username yoki email band!" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword, savedElements: [] });
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      savedElements: [],
+    });
     await newUser.save();
 
     res.status(201).json({ message: "Ro'yxatdan muvaffaqiyatli o'tdingiz!" });
@@ -61,14 +69,21 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ $or: [{ username: username }, { email: username }] });
+    const user = await User.findOne({
+      $or: [{ username: username }, { email: username }],
+    });
 
-    if (!user) return res.status(400).json({ error: "Foydalanuvchi topilmadi!" });
+    if (!user)
+      return res.status(400).json({ error: "Foydalanuvchi topilmadi!" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Parol noto'g'ri!" });
 
-    res.json({ message: "Xush kelibsiz!", username: user.username, email: user.email });
+    res.json({
+      message: "Xush kelibsiz!",
+      username: user.username,
+      email: user.email,
+    });
   } catch (error) {
     res.status(500).json({ error: "Serverda xatolik yuz berdi." });
   }
@@ -86,11 +101,14 @@ app.get("/api/elements", async (req, res) => {
 app.post("/api/elements", async (req, res) => {
   try {
     const { name, category, html, css, js, email } = req.body;
-    if (email !== "suxroberkinov438@gmail.com") return res.status(403).json({ error: "Sizda huquq yo'q!" });
+    if (email !== "suxroberkinov438@gmail.com")
+      return res.status(403).json({ error: "Sizda huquq yo'q!" });
 
     const newElement = new Element({ name, category, html, css, js: js || "" });
     await newElement.save();
-    res.status(201).json({ message: "Yangi komponent saqlandi!", element: newElement });
+    res
+      .status(201)
+      .json({ message: "Yangi komponent saqlandi!", element: newElement });
   } catch (error) {
     res.status(500).json({ error: "Elementni saqlashda xatolik." });
   }
@@ -100,7 +118,8 @@ app.delete("/api/elements/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { email } = req.body;
-    if (email !== "suxroberkinov438@gmail.com") return res.status(403).json({ error: "Sizda huquq yo'q!" });
+    if (email !== "suxroberkinov438@gmail.com")
+      return res.status(403).json({ error: "Sizda huquq yo'q!" });
 
     await Element.findByIdAndDelete(id);
     res.json({ message: "Element o'chirildi!" });
@@ -109,18 +128,21 @@ app.delete("/api/elements/:id", async (req, res) => {
   }
 });
 
-// --- STATIC ASSETS ---
+// --- STATIC ASSETS (MUTLAQO TO'G'RI VARIANT) ---
 const publicPath = path.join(__dirname, "public");
 app.use(express.static(publicPath));
 
-// Frontend sahifalari uchun aniq marshrutlar
+// Frontend sahifalari
 app.get("/", (req, res) => res.sendFile(path.join(publicPath, "index.html")));
-app.get("/dashboard.html", (--req, res) => res.sendFile(path.join(publicPath, "dashboard.html")));
-app.get("/save.html", (req, res) => res.sendFile(path.join(publicPath, "save.html")));
+app.get("/dashboard.html", (req, res) =>
+  res.sendFile(path.join(publicPath, "dashboard.html")),
+);
+app.get("/save.html", (req, res) =>
+  res.sendFile(path.join(publicPath, "save.html")),
+);
 
-// --- 🔥 NODE 24+ UCHUN TO'G'RILANGAN MULTAQLO XAFSIZ FALLBACK ---
-// Toza "*" belgisi o'rniga regex guruhidan foydalanamiz, bu crash bo'lishini srazu to'xtatadi
-app.get("(.*)", (req, res) => {
+// Har qanday boshqa so'rovda index.html ni yuklash
+app.get("*", (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });
 
