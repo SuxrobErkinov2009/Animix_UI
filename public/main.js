@@ -85,6 +85,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 const modalSaveBtn = document.getElementById("modalSaveBtn");
 const copyNotice = document.getElementById("copyNotice");
 
+// --- BACKENDDAN DATA YUKLASH ---
 async function loadElementsFromServer() {
   try {
     const response = await fetch("/api/elements");
@@ -99,10 +100,76 @@ async function loadElementsFromServer() {
       );
     }
   } catch (err) {
-    console.error(err);
+    console.error("Ma'lumot yuklashda xatolik:", err);
   }
 }
 
+// --- ADMIN FORM: ELEMENT QO'SHISH INTEGRATSIYASI ---
+createElementForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("elementName")?.value;
+  const category = document.getElementById("elementCategory")?.value;
+  const html = document.getElementById("elementHtml")?.value;
+  const css = document.getElementById("elementCss")?.value;
+  const js = document.getElementById("elementJs")?.value || "";
+
+  const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
+
+  // Server talab qilayotgan email tekshiruvi
+  if (!sessionUser || sessionUser.email !== "suxroberkinov438@gmail.com") {
+    alert("Sizda element qo'shish huquqi yo'q! Admin profil bilan kiring.");
+    return;
+  }
+
+  const payload = {
+    name,
+    category,
+    html,
+    css,
+    js,
+    email: sessionUser.email, // Server.js tekshiradigan maydon!
+  };
+
+  try {
+    const response = await fetch("/api/elements", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Element muvaffaqiyatli bazaga saqlandi va hammaga ko'rindi! 🎉");
+      createElementForm.reset();
+
+      // Modal oynani yopish (agar modal bo'lsa)
+      createModal?.classList.remove("active");
+
+      // Ro'yxatni backenddan qayta yuklash
+      await loadElementsFromServer();
+    } else {
+      alert("Server xatoligi: " + (data.error || "Qo'shib bo'lmadi"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Serverga ulanishda texnik xatolik!");
+  }
+});
+
+// --- MODAL BOSHQARIUVI ---
+openCreateModalBtn?.addEventListener("click", () =>
+  createModal?.classList.add("active"),
+);
+closeCreateBtn?.addEventListener("click", () =>
+  createModal?.classList.remove("active"),
+);
+closeCodeBtn?.addEventListener("click", () =>
+  codeModal?.classList.remove("active"),
+);
+
+// --- AUTH OYNASI ---
 function openAuth(mode) {
   authMode = mode;
   if (authError) authError.style.display = "none";
@@ -159,7 +226,7 @@ authForm?.addEventListener("submit", async (e) => {
     };
     localStorage.setItem("activeUser", JSON.stringify(adminData));
     authModal?.classList.remove("active");
-    window.location.href = "dashboard.html";
+    window.location.reload();
     return;
   }
 
@@ -213,25 +280,18 @@ authForm?.addEventListener("submit", async (e) => {
       openAuth("login");
     }
   } catch (err) {
-    localStorage.setItem(
-      "activeUser",
-      JSON.stringify({ username: username, email: "user@example.com" }),
-    );
-    authModal?.classList.remove("active");
-    checkSession();
+    console.error(err);
   }
 });
 
+// --- COMPONENTLARNI RENDER QILISH ---
 function renderElements(categoryFilter = "button", searchQuery = "") {
   if (!elementsGrid) return;
   elementsGrid.innerHTML = "";
 
-  const urlParams = new URLSearchParams(window.location.search);
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
   const isAdminMode =
-    urlParams.get("mode") === "admin" &&
-    sessionUser &&
-    sessionUser.email === "suxroberkinov438@gmail.com";
+    sessionUser && sessionUser.email === "suxroberkinov438@gmail.com";
 
   const activeMenuIndex = parseInt(
     localStorage.getItem("activeMenuIndex") || "0",
@@ -279,6 +339,7 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
       </div>
     `;
 
+    // JavaScript xavfsiz injeksiya
     if (item.js && item.js.trim() !== "") {
       setTimeout(() => {
         try {
@@ -311,7 +372,7 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
               });
               if (response.ok) {
                 alert("Element o'chirildi!");
-                loadElementsFromServer();
+                await loadElementsFromServer();
               }
             } catch (err) {
               console.error(err);
@@ -340,15 +401,11 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
   });
 }
 
+// --- SESSIYANI TEKSHIRISH ---
 function checkSession() {
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
-  const currentFilename = window.location.pathname.split("/").pop();
 
   if (!sessionUser) {
-    if (currentFilename === "dashboard.html") {
-      window.location.href = "index.html";
-      return;
-    }
     if (landingPage) landingPage.style.display = "flex";
     if (mainDashboard) mainDashboard.style.display = "none";
     if (headerSaveBtn) headerSaveBtn.style.display = "none";
@@ -358,24 +415,12 @@ function checkSession() {
 
   const isRealAdmin = sessionUser.email === "suxroberkinov438@gmail.com";
 
-  if (currentFilename === "dashboard.html" && !isRealAdmin) {
-    window.location.href = "index.html";
-    return;
-  }
-
   if (landingPage) landingPage.style.display = "none";
   if (mainDashboard) mainDashboard.style.display = "block";
   if (headerSaveBtn) headerSaveBtn.style.display = "inline-block";
 
   if (openCreateModalBtn) {
-    if (isRealAdmin) {
-      openCreateModalBtn.style.display = "inline-block";
-      openCreateModalBtn.onclick = () => {
-        window.location.href = "dashboard.html";
-      };
-    } else {
-      openCreateModalBtn.style.display = "none";
-    }
+    openCreateModalBtn.style.display = isRealAdmin ? "inline-block" : "none";
   }
 
   if (profilKonteyner) {
@@ -392,7 +437,7 @@ function checkSession() {
   updateContent(savedIndex !== null ? parseInt(savedIndex) : 0);
 }
 
-document.getElementById("logoutBtn")?.addEventListener("click", () => {
+logoutBtn?.addEventListener("click", () => {
   localStorage.removeItem("activeUser");
   window.location.reload();
 });
