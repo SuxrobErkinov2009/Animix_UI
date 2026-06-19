@@ -372,11 +372,7 @@ body {
   background: #191f42;
 }
 
-/* Profile Dropdown */
-#profileDropdown {
-  display: none;
-}
-
+/* BUG FIX: Profile Dropdown visibility */
 #profileDropdown.active {
   display: block !important;
 }

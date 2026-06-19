@@ -415,29 +415,17 @@ function checkSession() {
       </div>
     `;
 
-    // Profile trigger event listener
-    const profileTrigger = document.getElementById("profileTrigger");
-    if (profileTrigger) {
-      profileTrigger.addEventListener("click", (e) => {
+    document
+      .getElementById("profileTrigger")
+      ?.addEventListener("click", (e) => {
         e.stopPropagation();
-        // Toggle dropdown visibility
-        if (profileDropdown) {
-          profileDropdown.classList.toggle("active");
-        }
+        profileDropdown?.classList.toggle("active");
       });
-    }
   }
 
   const savedIndex = localStorage.getItem("activeMenuIndex");
   updateContent(savedIndex !== null ? parseInt(savedIndex) : 0);
 }
-
-// Close dropdown when clicking elsewhere
-document.addEventListener("click", (e) => {
-  if (profileDropdown && !e.target.closest("#profil-konteyner")) {
-    profileDropdown.classList.remove("active");
-  }
-});
 
 logoutBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
@@ -539,6 +527,10 @@ sidebarItems.forEach((item, index) => {
 searchInput?.addEventListener("input", (e) => {
   const activeIndex = parseInt(localStorage.getItem("activeMenuIndex") || "0");
   renderElements(menuStyles[activeIndex].key, e.target.value);
+});
+
+document.addEventListener("click", () => {
+  profileDropdown?.classList.remove("active");
 });
 
 document.addEventListener("DOMContentLoaded", () => {
