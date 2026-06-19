@@ -142,9 +142,6 @@ createElementForm?.addEventListener("submit", async (e) => {
   }
 });
 
-openCreateModalBtn?.addEventListener("click", () =>
-  createModal?.classList.add("active"),
-);
 closeCreateBtn?.addEventListener("click", () =>
   createModal?.classList.remove("active"),
 );
@@ -531,6 +528,11 @@ searchInput?.addEventListener("input", (e) => {
 
 document.addEventListener("click", () => {
   profileDropdown?.classList.remove("active");
+});
+
+// 🔧 TUZATILGAN: Yaratish tugmasi dashboard.html'ga o'tadi
+openCreateModalBtn?.addEventListener("click", () => {
+  window.location.href = "dashboard.html";
 });
 
 document.addEventListener("DOMContentLoaded", () => {
