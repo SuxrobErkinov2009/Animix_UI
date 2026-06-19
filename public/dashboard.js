@@ -8,41 +8,95 @@
   }
 })();
 
+const BACKEND_URL = "https://animix-ui.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
   const adminCreateForm = document.getElementById("adminCreateForm");
+  const submitMessage = document.getElementById("submitMessage");
 
   if (adminCreateForm) {
-    adminCreateForm.addEventListener("submit", (e) => {
+    adminCreateForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const name = document.getElementById("adminElName").value;
+      // Validatsiya
+      const name = document.getElementById("adminElName").value.trim();
       const category = document.getElementById("adminElCategory").value;
-      const html = document.getElementById("adminElHtml").value;
-      const css = document.getElementById("adminElCss").value;
-      const js = document.getElementById("adminElJs").value;
+      const html = document.getElementById("adminElHtml").value.trim();
+      const css = document.getElementById("adminElCss").value.trim();
+      const js = document.getElementById("adminElJs").value.trim();
 
-      const newElement = {
-        id: "el_" + Date.now(), // Unikal ID
-        category: category,
+      if (!name || !html || !css) {
+        showMessage("Barcha maydonlar to'ldirilishi shart! ❌", "error");
+        return;
+      }
+
+      const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
+
+      const payload = {
         name: name,
+        category: category,
         html: html,
         css: css,
         js: js,
-        author: "Admin",
+        email: sessionUser.email,
       };
 
-      // Brauzer xotirasidan eskilarni olamiz
-      let customElements =
-        JSON.parse(localStorage.getItem("customUiElements")) || [];
-      customElements.push(newElement);
+      try {
+        // Tugmani disable qilish
+        const submitBtn = adminCreateForm.querySelector(".add-component-btn");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Yuborilmoqda...";
 
-      // Xotiraga qayta yozamiz (bunda ma'lumot hech qayerga yo'qolmaydi)
-      localStorage.setItem("customUiElements", JSON.stringify(customElements));
+        const response = await fetch(`${BACKEND_URL}/api/elements`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-      alert(
-        "Komponent muvaffaqiyatli saqlandi! Sahifadan o'tib tekshirishingiz mumkin. ✅",
-      );
-      adminCreateForm.reset();
+        const data = await response.json();
+
+        if (response.ok) {
+          showMessage("Element muvaffaqiyatli bazaga qo'shildi! ✅", "success");
+          adminCreateForm.reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Elementni Ro'yxatga Qo'shish ✨";
+
+          // 2 sekunddan keyin sahifani yangilash
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 2000);
+        } else {
+          showMessage(
+            "Xatolik: " + (data.error || "Element qo'shib bo'lmadi!"),
+            "error",
+          );
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Elementni Ro'yxatga Qo'shish ✨";
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        showMessage(
+          "Serverga ulanishda xatolik! Internetni tekshiring.",
+          "error",
+        );
+        const submitBtn = adminCreateForm.querySelector(".add-component-btn");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Elementni Ro'yxatga Qo'shish ✨";
+      }
     });
+  }
+
+  // Message ko'rsatish funksiyasi
+  function showMessage(text, type) {
+    if (!submitMessage) return;
+
+    submitMessage.textContent = text;
+    submitMessage.className = `submit-message ${type}`;
+
+    if (type === "success") {
+      setTimeout(() => {
+        submitMessage.className = "submit-message";
+      }, 5000);
+    }
   }
 });
