@@ -340,7 +340,7 @@ function renderElements(categoryFilter = "button", searchQuery = "") {
     if (isAdminMode) {
       card
         .querySelector(".admin-delete-btn")
-        ?.addEventListener("click", async () => {
+        .addEventListener("click", async () => {
           if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
             try {
               const response = await fetch(
@@ -467,13 +467,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let width = (canvas.width = window.innerWidth);
   let height = (canvas.height = window.innerHeight);
 
-  // STABIL RESPONSIVE: Doimiy nuqtalar soni
   const totalNodesCount = 350;
   const nodes = [];
 
   let mouse = { x: undefined, y: undefined, radius: 220 };
-
-  // BOSILGANDA VA AVTOMATIK HOSIL BO'LADIGAN TO'LQINLAR
   let rippleWaves = [];
 
   class OrbitNode {
@@ -501,7 +498,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     update() {
-      // 1. DOIMIY AYLANMA HARAKAT
       this.angle += this.orbitSpeed;
       let currentOrbitX =
         this.currentBaseX + Math.cos(this.angle) * this.orbitRadius;
@@ -511,7 +507,6 @@ document.addEventListener("DOMContentLoaded", () => {
       let targetX = currentOrbitX;
       let targetY = currentOrbitY;
 
-      // 2. SICHQONCHA EKSTREMAL TORTISHISH KUCHI
       if (mouse.x !== undefined && mouse.y !== undefined) {
         let dx = mouse.x - currentOrbitX;
         let dy = mouse.y - currentOrbitY;
@@ -527,7 +522,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // 3. SUV TO'LQINI MATEMATIKASI (Klik + 3 sekundlik avto-to'lqinlar)
       for (let w = 0; w < rippleWaves.length; w++) {
         let wave = rippleWaves[w];
         let wDx = this.x - wave.x;
@@ -546,7 +540,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Silliq elastik inersiya
       this.x += (targetX - this.x) * 0.2;
       this.y += (targetY - this.y) * 0.2;
     }
@@ -554,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(0, 243, 255, 0.5)";
+      ctx.fillStyle = "rgba(0, 243, 255, 0.4)";
       ctx.fill();
     }
   }
@@ -563,19 +556,18 @@ document.addEventListener("DOMContentLoaded", () => {
     nodes.push(new OrbitNode());
   }
 
-  // 🟢 YANGI MANTIQ: HAR 3 SEKUNDDA MARKAZDAN TO'LQIN CHIQARISH
   setInterval(() => {
     let isMobile = width < 768;
     rippleWaves.push({
-      x: width / 2, // Ekran qoq markazi (X)
-      y: height / 2, // Ekran qoq markazi (Y)
+      x: width / 2,
+      y: height / 2,
       radius: 0,
       maxRadius: Math.max(width, height) * (isMobile ? 0.9 : 1.3),
       speed: isMobile ? 10 : 12,
-      amplitude: isMobile ? 40 : 60, // Markaziy to'lqin chiroyli chayqalishi uchun kuchliroq amplituda
+      amplitude: isMobile ? 40 : 60,
       wavelength: isMobile ? 80 : 120,
     });
-  }, 3000); // 3000ms = 3 sekund
+  }, 3000);
 
   window.addEventListener("resize", () => {
     width = canvas.width = window.innerWidth;
@@ -583,8 +575,8 @@ document.addEventListener("DOMContentLoaded", () => {
     mouse.radius = width < 768 ? 130 : 220;
   });
 
-  // Interaktiv hodisalar
   window.addEventListener("mousemove", (e) => {
+    if (width < 768 && e.movementX === 0 && e.movementY === 0) return;
     mouse.x = e.clientX;
     mouse.y = e.clientY;
   });
@@ -594,7 +586,6 @@ document.addEventListener("DOMContentLoaded", () => {
     mouse.y = undefined;
   });
 
-  // SICHQONCHA BOSILGANDAGI TO'LQIN
   window.addEventListener("mousedown", (e) => {
     let isMobile = width < 768;
     rippleWaves.push({
@@ -608,7 +599,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // TELEFONDA TOUCH BO'LGANDA
   window.addEventListener(
     "touchstart",
     (e) => {
@@ -643,17 +633,17 @@ document.addEventListener("DOMContentLoaded", () => {
     { passive: true },
   );
 
-  window.addEventListener("touchend", () => {
+  const clearTouch = () => {
     mouse.x = undefined;
     mouse.y = undefined;
-  });
+  };
+  window.addEventListener("touchend", clearTouch);
+  window.addEventListener("touchcancel", clearTouch);
 
-  // Render funksiyasi
   function render() {
     ctx.fillStyle = "#03040a";
     ctx.fillRect(0, 0, width, height);
 
-    // To'lqinlarni kengaytirish va o'chirish
     for (let w = rippleWaves.length - 1; w >= 0; w--) {
       rippleWaves[w].radius += rippleWaves[w].speed;
       if (rippleWaves[w].radius > rippleWaves[w].maxRadius) {
@@ -673,7 +663,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < currentConnectionDist) {
-          let alpha = (1 - dist / currentConnectionDist) * 0.1;
+          let alpha = (1 - dist / currentConnectionDist) * 0.07;
           ctx.beginPath();
 
           if (mouse.x !== undefined && mouse.y !== undefined) {
@@ -682,7 +672,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let mDist = Math.sqrt(mDx * mDx + mDy * mDy);
 
             if (mDist < mouse.radius) {
-              alpha = (1 - dist / currentConnectionDist) * 0.4;
+              alpha = (1 - dist / currentConnectionDist) * 0.25;
               let isTight = mDist < mouse.radius * 0.4;
 
               ctx.strokeStyle = isTight
@@ -691,11 +681,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
               ctx.lineWidth = isTight ? 0.6 : 0.4;
             } else {
-              ctx.strokeStyle = `rgba(114, 120, 159, ${alpha * 0.6})`;
+              ctx.strokeStyle = `rgba(114, 120, 159, ${alpha * 0.5})`;
               ctx.lineWidth = 0.3;
             }
           } else {
-            ctx.strokeStyle = `rgba(0, 243, 255, ${alpha * 0.5})`;
+            ctx.strokeStyle = `rgba(0, 243, 255, ${alpha * 0.4})`;
             ctx.lineWidth = 0.3;
           }
 
@@ -788,7 +778,6 @@ document.addEventListener("click", () => {
   profileDropdown?.classList.remove("active");
 });
 
-// 🔧 TUZATILGAN: Yaratish tugmasi dashboard.html'ga o'tadi
 openCreateModalBtn?.addEventListener("click", () => {
   window.location.href = "dashboard.html";
 });
