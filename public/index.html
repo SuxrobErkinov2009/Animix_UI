@@ -7,7 +7,6 @@
     <title>Animix UI - Neon Community</title>
   </head>
   <body>
-
     <div id="animix-cyber-bg"></div>
 
     <div id="landingPage" class="landing-hero">
@@ -25,6 +24,13 @@
         </div>
       </div>
       <div class="landing-body">
+        <div id="animix-main-badge">
+          <span class="badge-static"
+            >Animix UI da nimalarni topish mumkin:</span
+          >
+          <span id="dynamic-feature-text"></span>
+        </div>
+
         <h2 class="hero-title">
           Dasturchilar Uchun <span class="neon-text">Maftunkor</span> UI
           Elementlar
@@ -274,13 +280,13 @@
           <h3>Element Kodlari</h3>
           <button class="close-modal-btn" id="closeCodeBtn">&times;</button>
         </div>
-        
+
         <div class="uiverse-modal__body">
           <!-- Preview Bo'limi -->
           <div class="uiverse-modal__preview-box">
             <div id="modalElementPreview"></div>
           </div>
-          
+
           <!-- Code Bo'limi -->
           <div class="uiverse-modal__code-box">
             <!-- Tabs -->
@@ -291,19 +297,16 @@
                 <button class="tab-btn" data-lang="js">JavaScript</button>
               </div>
             </div>
-            
+
             <!-- Code Display Area -->
             <div class="uiverse-code-wrapper">
               <pre><code id="codeDisplay"></code></pre>
             </div>
-            
+
             <!-- Copy Button Footer -->
             <div class="uiverse-code-box-footer">
               <span id="copyNotice">Nusxalandi! ✅</span>
-              <button
-                class="uiverse-copy-btn"
-                id="modalCopyBtn"
-              >
+              <button class="uiverse-copy-btn" id="modalCopyBtn">
                 Nusxalash
               </button>
             </div>

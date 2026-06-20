@@ -214,6 +214,67 @@ body {
   animation: itemGlow 0.4s ease-out;
 }
 
+#animix-main-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 35px;
+  text-align: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+#animix-main-badge .badge-static {
+  font-size: 24px;
+  font-weight: 500;
+  color: #c9cedd;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+#animix-main-badge #dynamic-feature-text {
+  font-size: 24px;
+  color: #00f3ff;
+  font-weight: 700;
+  border-right: 3px solid #00f3ff;
+  padding-right: 8px;
+  text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+  animation: blinkFeatureCursor 0.8s step-end infinite;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+@keyframes blinkFeatureCursor {
+  from, to { border-color: transparent }
+  50% { border-color: #00f3ff; }
+}
+
+@media (max-width: 1200px) {
+  #animix-main-badge .badge-static,
+  #animix-main-badge #dynamic-feature-text {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  #animix-main-badge {
+    flex-direction: column;
+    gap: 6px;
+  }
+  #animix-main-badge .badge-static,
+  #animix-main-badge #dynamic-feature-text {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  #animix-main-badge .badge-static,
+  #animix-main-badge #dynamic-feature-text {
+    font-size: 12px;
+  }
+}
+
 @keyframes itemGlow {
   0% {
     background: #1e2245;

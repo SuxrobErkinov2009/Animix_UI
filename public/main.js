@@ -702,6 +702,51 @@ document.addEventListener("DOMContentLoaded", () => {
   render();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const features = [
+    "Takrorlanmas Buttonlar",
+    "Eng zor Yuklanish animatsiyalari",
+    "Maftunkor Inputlar",
+    "Eng chiroyli Modallar",
+    "Kontrastli Kartalar",
+    "Jozibali Formlar",
+  ];
+
+  let featureIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  const featureElement = document.getElementById("dynamic-feature-text");
+
+  function typeFeatures() {
+    if (!featureElement) return;
+
+    const currentFeature = features[featureIndex];
+
+    if (isDeleting) {
+      featureElement.innerText = currentFeature.substring(0, charIndex - 1);
+      charIndex--;
+    } else {
+      featureElement.innerText = currentFeature.substring(0, charIndex + 1);
+      charIndex++;
+    }
+
+    let speed = isDeleting ? 40 : 80;
+
+    if (!isDeleting && charIndex === currentFeature.length) {
+      speed = 1800;
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      featureIndex = (featureIndex + 1) % features.length;
+      speed = 400;
+    }
+
+    setTimeout(typeFeatures, speed);
+  }
+
+  typeFeatures();
+});
+
 function openCodeModal(item) {
   currentActiveElement = item;
   currentActiveLang = "html";
