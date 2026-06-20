@@ -454,6 +454,264 @@ function toggleSaveElement(item) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("animix-cyber-bg");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const canvas = document.createElement("canvas");
+  container.appendChild(canvas);
+  const ctx = canvas.getContext("2d");
+
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
+
+  // STABIL RESPONSIVE: Doimiy nuqtalar soni
+  const totalNodesCount = 350;
+  const nodes = [];
+
+  let mouse = { x: undefined, y: undefined, radius: 220 };
+
+  // BOSILGANDA VA AVTOMATIK HOSIL BO'LADIGAN TO'LQINLAR
+  let rippleWaves = [];
+
+  class OrbitNode {
+    constructor() {
+      this.pctX = Math.random();
+      this.pctY = Math.random();
+
+      this.orbitRadius = Math.random() * 14 + 6;
+      this.angle = Math.random() * Math.PI * 2;
+      this.orbitSpeed =
+        (Math.random() * 0.02 + 0.01) * (Math.random() > 0.5 ? 1 : -1);
+
+      this.x = this.pctX * width;
+      this.y = this.pctY * height;
+
+      this.radius = 1.4;
+      this.color = Math.random() > 0.5 ? "#00f3ff" : "#ff007c";
+    }
+
+    get currentBaseX() {
+      return this.pctX * width;
+    }
+    get currentBaseY() {
+      return this.pctY * height;
+    }
+
+    update() {
+      // 1. DOIMIY AYLANMA HARAKAT
+      this.angle += this.orbitSpeed;
+      let currentOrbitX =
+        this.currentBaseX + Math.cos(this.angle) * this.orbitRadius;
+      let currentOrbitY =
+        this.currentBaseY + Math.sin(this.angle) * this.orbitRadius;
+
+      let targetX = currentOrbitX;
+      let targetY = currentOrbitY;
+
+      // 2. SICHQONCHA EKSTREMAL TORTISHISH KUCHI
+      if (mouse.x !== undefined && mouse.y !== undefined) {
+        let dx = mouse.x - currentOrbitX;
+        let dy = mouse.y - currentOrbitY;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < mouse.radius) {
+          let force = (mouse.radius - dist) / mouse.radius;
+          let superShiftX = (dx / dist) * force * 140 * (dist / mouse.radius);
+          let superShiftY = (dy / dist) * force * 140 * (dist / mouse.radius);
+
+          targetX += superShiftX;
+          targetY += superShiftY;
+        }
+      }
+
+      // 3. SUV TO'LQINI MATEMATIKASI (Klik + 3 sekundlik avto-to'lqinlar)
+      for (let w = 0; w < rippleWaves.length; w++) {
+        let wave = rippleWaves[w];
+        let wDx = this.x - wave.x;
+        let wDy = this.y - wave.y;
+        let wDist = Math.sqrt(wDx * wDx + wDy * wDy);
+
+        if (wDist < wave.radius && wDist > wave.radius - wave.wavelength) {
+          let fade = 1 - wave.radius / wave.maxRadius;
+          let angle = ((wDist - wave.radius) / wave.wavelength) * Math.PI * 2;
+          let waveForce = Math.sin(angle) * wave.amplitude * fade;
+
+          if (wDist > 0) {
+            targetX += (wDx / wDist) * waveForce;
+            targetY += (wDy / wDist) * waveForce;
+          }
+        }
+      }
+
+      // Silliq elastik inersiya
+      this.x += (targetX - this.x) * 0.2;
+      this.y += (targetY - this.y) * 0.2;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(0, 243, 255, 0.5)";
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < totalNodesCount; i++) {
+    nodes.push(new OrbitNode());
+  }
+
+  // 🟢 YANGI MANTIQ: HAR 3 SEKUNDDA MARKAZDAN TO'LQIN CHIQARISH
+  setInterval(() => {
+    let isMobile = width < 768;
+    rippleWaves.push({
+      x: width / 2, // Ekran qoq markazi (X)
+      y: height / 2, // Ekran qoq markazi (Y)
+      radius: 0,
+      maxRadius: Math.max(width, height) * (isMobile ? 0.9 : 1.3),
+      speed: isMobile ? 10 : 12,
+      amplitude: isMobile ? 40 : 60, // Markaziy to'lqin chiroyli chayqalishi uchun kuchliroq amplituda
+      wavelength: isMobile ? 80 : 120,
+    });
+  }, 3000); // 3000ms = 3 sekund
+
+  window.addEventListener("resize", () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    mouse.radius = width < 768 ? 130 : 220;
+  });
+
+  // Interaktiv hodisalar
+  window.addEventListener("mousemove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  window.addEventListener("mouseleave", () => {
+    mouse.x = undefined;
+    mouse.y = undefined;
+  });
+
+  // SICHQONCHA BOSILGANDAGI TO'LQIN
+  window.addEventListener("mousedown", (e) => {
+    let isMobile = width < 768;
+    rippleWaves.push({
+      x: e.clientX,
+      y: e.clientY,
+      radius: 0,
+      maxRadius: Math.max(width, height) * (isMobile ? 0.8 : 1.2),
+      speed: isMobile ? 12 : 14,
+      amplitude: isMobile ? 35 : 55,
+      wavelength: isMobile ? 70 : 100,
+    });
+  });
+
+  // TELEFONDA TOUCH BO'LGANDA
+  window.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.touches.length > 0) {
+        let isMobile = width < 768;
+        let touch = e.touches[0];
+        mouse.x = touch.clientX;
+        mouse.y = touch.clientY;
+
+        rippleWaves.push({
+          x: touch.clientX,
+          y: touch.clientY,
+          radius: 0,
+          maxRadius: Math.max(width, height) * (isMobile ? 0.8 : 1.2),
+          speed: isMobile ? 12 : 14,
+          amplitude: isMobile ? 35 : 55,
+          wavelength: isMobile ? 70 : 100,
+        });
+      }
+    },
+    { passive: true },
+  );
+
+  window.addEventListener(
+    "touchmove",
+    (e) => {
+      if (e.touches.length > 0) {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+      }
+    },
+    { passive: true },
+  );
+
+  window.addEventListener("touchend", () => {
+    mouse.x = undefined;
+    mouse.y = undefined;
+  });
+
+  // Render funksiyasi
+  function render() {
+    ctx.fillStyle = "#03040a";
+    ctx.fillRect(0, 0, width, height);
+
+    // To'lqinlarni kengaytirish va o'chirish
+    for (let w = rippleWaves.length - 1; w >= 0; w--) {
+      rippleWaves[w].radius += rippleWaves[w].speed;
+      if (rippleWaves[w].radius > rippleWaves[w].maxRadius) {
+        rippleWaves.splice(w, 1);
+      }
+    }
+
+    let currentConnectionDist = width < 768 ? 75 : 95;
+
+    for (let i = 0; i < nodes.length; i++) {
+      nodes[i].update();
+      nodes[i].draw();
+
+      for (let j = i + 1; j < nodes.length; j++) {
+        let dx = nodes[i].x - nodes[j].x;
+        let dy = nodes[i].y - nodes[j].y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < currentConnectionDist) {
+          let alpha = (1 - dist / currentConnectionDist) * 0.1;
+          ctx.beginPath();
+
+          if (mouse.x !== undefined && mouse.y !== undefined) {
+            let mDx = mouse.x - nodes[i].x;
+            let mDy = mouse.y - nodes[i].y;
+            let mDist = Math.sqrt(mDx * mDx + mDy * mDy);
+
+            if (mDist < mouse.radius) {
+              alpha = (1 - dist / currentConnectionDist) * 0.4;
+              let isTight = mDist < mouse.radius * 0.4;
+
+              ctx.strokeStyle = isTight
+                ? `rgba(255, 0, 124, ${alpha})`
+                : `rgba(0, 243, 255, ${alpha})`;
+
+              ctx.lineWidth = isTight ? 0.6 : 0.4;
+            } else {
+              ctx.strokeStyle = `rgba(114, 120, 159, ${alpha * 0.6})`;
+              ctx.lineWidth = 0.3;
+            }
+          } else {
+            ctx.strokeStyle = `rgba(0, 243, 255, ${alpha * 0.5})`;
+            ctx.lineWidth = 0.3;
+          }
+
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  render();
+});
+
 function openCodeModal(item) {
   currentActiveElement = item;
   currentActiveLang = "html";
