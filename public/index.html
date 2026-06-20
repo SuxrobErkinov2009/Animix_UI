@@ -174,7 +174,7 @@
               <li class="sidebar__item" data-index="1">⏳ Loaderlar</li>
               <li class="sidebar__item" data-index="2">⌨️ Inputlar</li>
               <li class="sidebar__item" data-index="3">🪟 Modallar</li>
-              <li class="sidebar__item" data-index="4">🗂️ Kartalar</li>
+              <li class="sidebar__item" data-index="4">𗂂 Kartalar</li>
             </ul>
           </aside>
 
@@ -233,6 +233,51 @@
           >
             Kirish
           </button>
+
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              margin-top: 15px;
+              width: 100%;
+            "
+          >
+            <button
+              id="googleAuthBtn"
+              type="button"
+              style="
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                background: rgba(255, 255, 255, 0.02);
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid #00f3ff;
+                color: #fff;
+                cursor: pointer;
+                font-weight: 600;
+                box-shadow: 0 0 10px rgba(0, 243, 255, 0.15);
+                transition: 0.3s;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                fill="currentColor"
+                class="bi bi-google"
+                viewBox="0 0 16 16"
+                style="color: #00f3ff"
+              >
+                <path
+                  d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0c2.244 0 4.141.828 5.617 2.22l-2.21 2.21C10.4 3.444 9.398 3 8 3c-2.437 0-4.544 1.536-5.279 3.651A5.32 5.32 0 0 0 2 8c0 .485.064.959.182 1.41a5.002 5.002 0 0 0 5.278 3.65c1.398 0 2.42-.315 3.208-.941.905-.693 1.48-1.716 1.643-2.977H8v-2.87z"
+                />
+              </svg>
+              Google orqali kirish
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -273,7 +318,6 @@
       </div>
     </div>
 
-    <!-- CODE MODAL - FIXED VERSION -->
     <div class="modal-overlay" id="codeModal">
       <div class="uiverse-modal">
         <div class="uiverse-modal__header">
@@ -282,14 +326,11 @@
         </div>
 
         <div class="uiverse-modal__body">
-          <!-- Preview Bo'limi -->
           <div class="uiverse-modal__preview-box">
             <div id="modalElementPreview"></div>
           </div>
 
-          <!-- Code Bo'limi -->
           <div class="uiverse-modal__code-box">
-            <!-- Tabs -->
             <div class="uiverse-tabs">
               <div style="display: flex; gap: 5px">
                 <button class="tab-btn active" data-lang="html">HTML</button>
@@ -298,12 +339,10 @@
               </div>
             </div>
 
-            <!-- Code Display Area -->
             <div class="uiverse-code-wrapper">
               <pre><code id="codeDisplay"></code></pre>
             </div>
 
-            <!-- Copy Button Footer -->
             <div class="uiverse-code-box-footer">
               <span id="copyNotice">Nusxalandi! ✅</span>
               <button class="uiverse-copy-btn" id="modalCopyBtn">
@@ -315,6 +354,6 @@
       </div>
     </div>
 
-    <script src="./main.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
