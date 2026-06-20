@@ -247,23 +247,29 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 80px;
   left: 0;
   bottom: 0;
   width: 260px;
   background: rgba(11, 12, 16, 0.98);
   border-right: 1px solid rgba(0, 243, 255, 0.2);
   padding: 20px;
-  z-index: 999;
+  z-index: 99;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
 }
 
 .main-content {
   margin-left: 260px;
   width: calc(100% - 260px);
-  padding: 20px;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+#elementsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  width: 100%;
 }
 
 @keyframes blinkFeatureCursor {
