@@ -245,6 +245,24 @@ body {
   white-space: nowrap;
 }
 
+.sidebar {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  background: rgba(11, 12, 16, 0.95);
+  border-right: 1px solid rgba(0, 243, 255, 0.2);
+  padding: 20px;
+  z-index: 99;
+  overflow-y: auto;
+}
+
+.main-content {
+  margin-left: 280px;
+  padding: 20px;
+}
+
 @keyframes blinkFeatureCursor {
   from, to { border-color: transparent }
   50% { border-color: #00f3ff; }
