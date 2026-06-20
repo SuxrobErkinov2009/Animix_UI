@@ -247,19 +247,22 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 80px;
+  top: 0;
   left: 0;
   bottom: 0;
   width: 260px;
-  background: rgba(11, 12, 16, 0.95);
+  background: rgba(11, 12, 16, 0.98);
   border-right: 1px solid rgba(0, 243, 255, 0.2);
   padding: 20px;
-  z-index: 99;
+  z-index: 999;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
-  margin-left: 280px;
+  margin-left: 260px;
+  width: calc(100% - 260px);
   padding: 20px;
 }
 
