@@ -253,7 +253,7 @@ body {
 @media (max-width: 1200px) {
   #animix-main-badge .badge-static,
   #animix-main-badge #dynamic-feature-text {
-    font-size: 22px;
+    font-size: 20px;
   }
 }
 
@@ -261,17 +261,26 @@ body {
   #animix-main-badge {
     flex-direction: column;
     gap: 6px;
+    min-height: 70px;
   }
-  #animix-main-badge .badge-static,
+  #animix-main-badge .badge-static {
+    font-size: 18px;
+  }
   #animix-main-badge #dynamic-feature-text {
-    font-size: 20px;
+    font-size: 18px;
+    display: inline-block;
   }
 }
 
 @media (max-width: 480px) {
-  #animix-main-badge .badge-static,
+  #animix-main-badge {
+    min-height: 60px;
+  }
+  #animix-main-badge .badge-static {
+    font-size: 14px;
+  }
   #animix-main-badge #dynamic-feature-text {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
