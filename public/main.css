@@ -216,13 +216,18 @@ body {
 .main-content {
   margin-left: 300px;
   width: calc(100% - 300px);
-  padding: 40px;
+  padding: 40px clamp(20px, 5vw, 60px);
   box-sizing: border-box;
   min-height: 100vh;
 }
 
 .content__header {
   margin-bottom: 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .content__header h2 {
@@ -230,12 +235,16 @@ body {
   color: #ff007c;
   text-shadow: 0 0 15px rgba(255, 0, 124, 0.5);
   font-weight: 800;
+  margin: 0 0 clamp(8px, 1.5vw, 12px) 0;
+  text-align: center;
 }
 
 .content__header p {
   color: #a2aabf;
   font-size: clamp(13px, 2vw, 16px);
   font-weight: 500;
+  margin: 0;
+  text-align: center;
 }
 
 .content-area {
@@ -244,12 +253,27 @@ body {
 }
 
 /* ELEMENTS GRID */
+/* ELEMENTS GRID - RESPONSIVE 3/2/1 */
 .elements__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 25px;
   align-items: start;
   width: 100%;
+}
+
+/* TABLET: 2 ta qator */
+@media (max-width: 1199px) {
+  .elements__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE: 1 ta qator */
+@media (max-width: 767px) {
+  .elements__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .element-card {
@@ -268,13 +292,13 @@ body {
 
 .element-preview {
   background: #040510;
-  height: 200px;
+  height: clamp(150px, 30vw, 200px);
   display: flex;
   justify-content: center;
   align-items: center;
   border-bottom: 2px solid #252a54;
   padding: 15px;
-  overflow: visible !important;
+  overflow: auto !important;
   position: relative;
   width: 100%;
 }
@@ -282,78 +306,10 @@ body {
 .element-preview > * {
   max-width: 100% !important;
   max-height: 100% !important;
-  box-sizing: border-box !important;
-  margin: 0 !important;
-  padding: 0 !important;
 }
 
-/* SVG LOADERLAR UCHUN */
-.element-preview svg {
-  width: auto !important;
-  height: auto !important;
-  max-width: 150px !important;
-  max-height: 150px !important;
-  filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.3)) !important;
-  stroke: #00f3ff !important;
-  fill: #00f3ff !important;
-}
-
-/* CANVAS LOADERLAR UCHUN */
-.element-preview canvas {
-  max-width: 100% !important;
-  max-height: 100% !important;
-  display: block !important;
-  margin: 0 auto !important;
-}
-
-/* DIV LOADERLAR UCHUN */
-.element-preview > div {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* LOADER CLASS'LARI UCHUN */
-.element-preview .loader,
-.element-preview [class*="loader"],
-.element-preview [class*="spinner"],
-.element-preview [class*="spin"] {
-  color: #00f3ff !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  stroke: #00f3ff !important;
-  fill: #00f3ff !important;
-}
-
-/* NEON EFFEKT LOADERLAR UCHUN */
-.element-preview [class*="glow"],
-.element-preview [class*="neon"],
-.element-preview [class*="cyber"] {
-  filter: drop-shadow(0 0 15px #00f3ff) !important;
-  color: #00f3ff !important;
-  stroke: #00f3ff !important;
-  fill: #00f3ff !important;
-}
-
-/* PINK/MAGENTA NEON UCHUN */
-.element-preview [class*="pink"],
-.element-preview [class*="magenta"],
-.element-preview [class*="hot"] {
-  color: #ff007c !important;
-  filter: drop-shadow(0 0 15px #ff007c) !important;
-  stroke: #ff007c !important;
-  fill: #ff007c !important;
-}
-
-/* GREEN NEON UCHUN */
-.element-preview [class*="green"],
-.element-preview [class*="success"] {
-  color: #00ff99 !important;
-  filter: drop-shadow(0 0 15px #00ff99) !important;
-  stroke: #00ff99 !important;
-  fill: #00ff99 !important;
+.element-preview style {
+  display: none !important;
 }
 
 .element-footer {
@@ -952,7 +908,7 @@ body {
   .main-content {
     margin-left: 0 !important;
     width: 100% !important;
-    padding: 20px 15px !important;
+    padding: 20px clamp(15px, 4vw, 30px) !important;
   }
 
   .elements__grid {
