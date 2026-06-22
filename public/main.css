@@ -18,7 +18,7 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: -1 !important;
-  background: #060713; /* To'q ko'k-binafsha texno fon */
+  background: #060713;
   pointer-events: none !important;
 }
 
@@ -28,12 +28,11 @@ body {
   height: 100%;
 }
 
-/* Kontent bloklari shaffofligi saqlanadi */
-.landing-hero, 
-.dashboard-root, 
+.landing-hero,
+.dashboard-root,
 .landing-header,
 .main-content {
-  background: transparent !important; 
+  background: transparent !important;
   position: relative;
   z-index: 1;
 }
@@ -44,11 +43,13 @@ body {
   margin: 0 auto;
 }
 
-/* Header */
+/* HEADER */
 .header {
   background: #0b0d1b;
   border-bottom: 2px solid #252a54;
   padding: 15px 0;
+  position: relative;
+  z-index: 100;
 }
 
 .header__wrapper {
@@ -60,13 +61,13 @@ body {
 .header__search input {
   background: #141833;
   border: 2px solid #2e3566;
-  padding: 10px 20px;
+  padding: clamp(8px, 1.5vw, 10px) clamp(15px, 3vw, 20px);
   color: #ffffff;
   border-radius: 20px;
-  width: 370px;
+  width: clamp(200px, 50vw, 370px);
   outline: none;
   font-family: sans-serif;
-  font-size: 16px;
+  font-size: clamp(13px, 2vw, 16px);
   font-weight: 600;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 0 0 rgba(0, 243, 255, 0);
@@ -92,15 +93,15 @@ body {
   opacity: 0.7;
 }
 
-/* Neon Tugmalar */
+/* NEON BUTTONS */
 .create-neon-btn,
 .submit-neon-btn {
   background: transparent;
   color: #ff007c;
   border: 2.5px solid #ff007c;
-  padding: 10px 24px;
+  padding: clamp(8px, 2vh, 10px) clamp(18px, 4vw, 24px);
   border-radius: 8px;
-  font-size: 15px;
+  font-size: clamp(13px, 2vw, 15px);
   font-weight: 800;
   cursor: pointer;
   position: relative;
@@ -143,20 +144,18 @@ body {
   box-shadow: 0 0 15px #ff007c;
 }
 
-/* Layout */
-.main-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 30px;
-  margin-top: 40px;
-}
-
-/* Sidebar */
+/* SIDEBAR - DESKTOP */
 .sidebar {
-  background: #0b0d1b;
-  border: 2px solid #252a54;
+  position: fixed;
+  top: 72px;
+  left: 0;
+  width: 260px;
+  background: rgba(11, 12, 16, 0.98);
+  border-right: 1px solid rgba(0, 243, 255, 0.2);
   padding: 20px;
-  height: fit-content;
+  z-index: 99;
+  overflow-y: auto;
+  height: calc(100vh - 72px);
 }
 
 .sidebar__menu {
@@ -164,12 +163,12 @@ body {
 }
 
 .sidebar__item {
-  padding: 15px;
+  padding: clamp(10px, 2vw, 15px);
   margin-bottom: 8px;
   border-radius: 8px;
   cursor: pointer;
   color: #cbd1f1;
-  font-size: 16px;
+  font-size: clamp(12px, 1.5vw, 16px);
   font-weight: 700;
   position: relative;
   overflow: hidden;
@@ -213,122 +212,21 @@ body {
   animation: itemGlow 0.4s ease-out;
 }
 
-#animix-main-badge {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 35px;
-  text-align: center;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-#animix-main-badge .badge-static {
-  font-size: 24px;
-  font-weight: 500;
-  color: #c9cedd;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-}
-
-#animix-main-badge #dynamic-feature-text {
-  font-size: 24px;
-  color: #00f3ff;
-  font-weight: 700;
-  border-right: 3px solid #00f3ff;
-  padding-right: 8px;
-  text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
-  animation: blinkFeatureCursor 0.8s step-end infinite;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-.sidebar {
-  position: fixed;
-  top: 72px;
-  left: 0;
-  bottom: 0;
-  width: 260px;
-  background: rgba(11, 12, 16, 0.98);
-  border-right: 1px solid rgba(0, 243, 255, 0.2);
-  padding: 20px;
-  z-index: 99;
-  overflow-y: auto;
-  height: 100vh;
-}
-
+/* MAIN CONTENT */
 .main-content {
-  margin-left: 190px;
-  width: calc(100% - 260px);
+  margin-left: 300px;
+  width: calc(100% - 300px);
   padding: 40px;
   box-sizing: border-box;
+  min-height: 100vh;
 }
 
-#elementsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-  width: 100%;
-}
-
-@keyframes blinkFeatureCursor {
-  from, to { border-color: transparent }
-  50% { border-color: #00f3ff; }
-}
-
-@media (max-width: 1200px) {
-  #animix-main-badge .badge-static,
-  #animix-main-badge #dynamic-feature-text {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  #animix-main-badge {
-    flex-direction: column;
-    gap: 6px;
-    min-height: 70px;
-  }
-  #animix-main-badge .badge-static {
-    font-size: 18px;
-  }
-  #animix-main-badge #dynamic-feature-text {
-    font-size: 18px;
-    display: inline-block;
-  }
-}
-
-@media (max-width: 480px) {
-  #animix-main-badge {
-    min-height: 60px;
-  }
-  #animix-main-badge .badge-static {
-    font-size: 14px;
-  }
-  #animix-main-badge #dynamic-feature-text {
-    font-size: 14px;
-  }
-}
-
-@keyframes itemGlow {
-  0% {
-    background: #1e2245;
-    transform: scale(0.98);
-  }
-  100% {
-    background: #141833;
-    transform: scale(1);
-  }
-}
-
-/* Content Area */
 .content__header {
   margin-bottom: 30px;
 }
 
 .content__header h2 {
-  font-size: 36px;
+  font-size: clamp(22px, 5vw, 36px);
   color: #ff007c;
   text-shadow: 0 0 15px rgba(255, 0, 124, 0.5);
   font-weight: 800;
@@ -336,7 +234,7 @@ body {
 
 .content__header p {
   color: #a2aabf;
-  font-size: 16px;
+  font-size: clamp(13px, 2vw, 16px);
   font-weight: 500;
 }
 
@@ -345,12 +243,13 @@ body {
   animation: pageFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* ===== ELEMENTS GRID - TUZATILGAN QISM ===== */
+/* ELEMENTS GRID */
 .elements__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 25px;
   align-items: start;
+  width: 100%;
 }
 
 .element-card {
@@ -362,23 +261,11 @@ body {
   flex-direction: column;
   width: 100%;
   min-width: 0;
-  max-width: 100%;
   opacity: 0;
   transform: scale(0.9) translateY(15px);
   animation: cardPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.element-card:nth-child(1) {
-  animation-delay: 0.05s;
-}
-.element-card:nth-child(2) {
-  animation-delay: 0.12s;
-}
-.element-card:nth-child(3) {
-  animation-delay: 0.19s;
-}
-
-/* Preview qutisini qat'iy chegaralash */
 .element-preview {
   background: #040510;
   height: 200px;
@@ -387,24 +274,94 @@ body {
   align-items: center;
   border-bottom: 2px solid #252a54;
   padding: 15px;
-  overflow: hidden;
+  overflow: visible !important;
   position: relative;
   width: 100%;
 }
 
-/* Ichkariga qo'shiladigan noodatiy katta elementlarni sig'dirish */
 .element-preview > * {
   max-width: 100% !important;
   max-height: 100% !important;
   box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* SVG LOADERLAR UCHUN */
+.element-preview svg {
+  width: auto !important;
+  height: auto !important;
+  max-width: 150px !important;
+  max-height: 150px !important;
+  filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.3)) !important;
+  stroke: #00f3ff !important;
+  fill: #00f3ff !important;
+}
+
+/* CANVAS LOADERLAR UCHUN */
+.element-preview canvas {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+/* DIV LOADERLAR UCHUN */
+.element-preview > div {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* LOADER CLASS'LARI UCHUN */
+.element-preview .loader,
+.element-preview [class*="loader"],
+.element-preview [class*="spinner"],
+.element-preview [class*="spin"] {
+  color: #00f3ff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  stroke: #00f3ff !important;
+  fill: #00f3ff !important;
+}
+
+/* NEON EFFEKT LOADERLAR UCHUN */
+.element-preview [class*="glow"],
+.element-preview [class*="neon"],
+.element-preview [class*="cyber"] {
+  filter: drop-shadow(0 0 15px #00f3ff) !important;
+  color: #00f3ff !important;
+  stroke: #00f3ff !important;
+  fill: #00f3ff !important;
+}
+
+/* PINK/MAGENTA NEON UCHUN */
+.element-preview [class*="pink"],
+.element-preview [class*="magenta"],
+.element-preview [class*="hot"] {
+  color: #ff007c !important;
+  filter: drop-shadow(0 0 15px #ff007c) !important;
+  stroke: #ff007c !important;
+  fill: #ff007c !important;
+}
+
+/* GREEN NEON UCHUN */
+.element-preview [class*="green"],
+.element-preview [class*="success"] {
+  color: #00ff99 !important;
+  filter: drop-shadow(0 0 15px #00ff99) !important;
+  stroke: #00ff99 !important;
+  fill: #00ff99 !important;
 }
 
 .element-footer {
-  padding: 15px;
+  padding: clamp(10px, 2vw, 15px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: clamp(11px, 2vw, 14px);
   font-weight: 600;
   color: #cbd1f1;
   background: #0b0d1b;
@@ -415,8 +372,8 @@ body {
   background: #141833;
   border: 2px solid #2e3566;
   color: #00f3ff;
-  padding: 8px 14px;
-  font-size: 13px;
+  padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 14px);
+  font-size: clamp(11px, 2vw, 13px);
   font-weight: 700;
   border-radius: 6px;
   cursor: pointer;
@@ -429,7 +386,7 @@ body {
   box-shadow: 0 0 15px #00f3ff;
 }
 
-/* Modal */
+/* MODAL */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -456,8 +413,8 @@ body {
   background: #0b0d1b;
   border: 2.5px solid #ff007c;
   border-radius: 16px;
-  padding: 30px;
-  width: 450px;
+  padding: clamp(15px, 3vw, 30px);
+  width: clamp(250px, 90vw, 450px);
   box-shadow: 0 0 40px rgba(255, 0, 124, 0.4);
 }
 
@@ -489,7 +446,7 @@ body {
   display: block;
   margin-bottom: 6px;
   color: #cbd1f1;
-  font-size: 15px;
+  font-size: clamp(13px, 2vw, 15px);
   font-weight: 700;
 }
 
@@ -499,9 +456,9 @@ body {
   width: 100%;
   background: #141833;
   border: 2px solid #2e3566;
-  padding: 12px;
+  padding: clamp(8px, 1.5vw, 12px);
   color: #ffffff;
-  font-size: 15px;
+  font-size: clamp(12px, 2vw, 15px);
   border-radius: 6px;
   outline: none;
 }
@@ -516,7 +473,7 @@ body {
   display: block !important;
 }
 
-/* ===== UIVERSE CODE MODAL ===== */
+/* UIVERSE CODE MODAL */
 .uiverse-modal {
   background: #0b0d1b;
   border: 2.5px solid #00f3ff;
@@ -555,7 +512,7 @@ body {
 
 .uiverse-modal__header h3 {
   color: #00f3ff;
-  font-size: 22px;
+  font-size: clamp(16px, 3vw, 22px);
   font-weight: 800;
   text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
 }
@@ -600,8 +557,8 @@ body {
   background: transparent;
   border: none;
   color: #a2aabf;
-  padding: 18px 20px;
-  font-size: 15px;
+  padding: clamp(12px, 2vw, 18px) clamp(14px, 3vw, 20px);
+  font-size: clamp(12px, 2vw, 15px);
   font-weight: 800;
   cursor: pointer;
   transition: 0.3s;
@@ -674,7 +631,7 @@ body {
   text-shadow: 0 0 8px #00ff99;
 }
 
-/* Landing */
+/* LANDING PAGE */
 .landing-hero {
   min-height: 100vh;
   display: flex;
@@ -685,6 +642,9 @@ body {
 .landing-header {
   padding: 20px 0;
   border-bottom: 1px solid #1c2242;
+  background: rgba(11, 13, 27, 0.95);
+  position: relative;
+  z-index: 100;
 }
 
 .landing-header__wrapper {
@@ -706,10 +666,10 @@ body {
 }
 
 .hero-title {
-  font-size: 52px;
+  font-size: clamp(22px, 6vw, 52px);
   font-weight: 800;
   line-height: 1.2;
-  margin-bottom: 20px;
+  margin-bottom: clamp(12px, 2vh, 20px);
 }
 
 .neon-text {
@@ -718,15 +678,16 @@ body {
 }
 
 .hero-desc {
-  font-size: 18px;
+  font-size: clamp(13px, 3vw, 18px);
   color: #a2aabf;
-  margin-bottom: 40px;
+  margin-bottom: clamp(25px, 5vh, 40px);
   line-height: 1.6;
 }
 
 .large-btn {
-  font-size: 18px;
-  padding: 15px 40px;
+  font-size: clamp(14px, 3vw, 18px);
+  padding: clamp(10px, 2vw, 15px) clamp(20px, 5vw, 40px);
+  min-width: clamp(150px, 40vw, 320px);
 }
 
 .auth-buttons {
@@ -743,23 +704,12 @@ body {
   white-space: nowrap;
 }
 
-.landing-header__wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-}
-
 .landing-header .header__logo {
   flex: 1;
 }
 
 .landing-header .header__logo h1 {
-  font-size: clamp(24px, 3vw, 36px);
-}
-
-.create-neon-btn {
-  width: 100%;
+  font-size: clamp(18px, 4vw, 36px);
 }
 
 .large-btn {
@@ -768,6 +718,53 @@ body {
   max-width: 320px;
   padding: 14px 36px;
   font-size: 18px;
+}
+
+#animix-main-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 35px;
+  text-align: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+#animix-main-badge .badge-static {
+  font-size: clamp(12px, 3vw, 24px);
+  font-weight: 500;
+  color: #c9cedd;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+#animix-main-badge #dynamic-feature-text {
+  font-size: clamp(12px, 3vw, 24px);
+  color: #00f3ff;
+  font-weight: 700;
+  border-right: 3px solid #00f3ff;
+  padding-right: 8px;
+  text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+  animation: blinkFeatureCursor 0.8s step-end infinite;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+@keyframes blinkFeatureCursor {
+  from, to { border-color: transparent }
+  50% { border-color: #00f3ff; }
+}
+
+@keyframes itemGlow {
+  0% {
+    background: #1e2245;
+    transform: scale(0.98);
+  }
+  100% {
+    background: #141833;
+    transform: scale(1);
+  }
 }
 
 @keyframes pageFadeIn {
@@ -794,7 +791,15 @@ body {
   }
 }
 
-/* ===== MEDIA QUERIES ===== */
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
+
+@media (max-width: 1200px) {
+  #animix-main-badge .badge-static,
+  #animix-main-badge #dynamic-feature-text {
+    font-size: 20px;
+  }
+}
+
 @media (max-width: 992px) {
   .hero-title {
     font-size: calc(28px + 1.5vw);
@@ -811,313 +816,6 @@ body {
   }
 }
 
-@media (max-width: 768px) {
-  /* 🟢 TO'G'RILANDI: Ekran 768px bo'lganda yozuv yuqoriga chiroyli ko'tariladi va bo'shliq yo'qoladi */
-  .landing-body {
-    padding: 10px 20px 40px 20px !important; /* Yuqoridagi ulkan padding qisqartirildi */
-  }
-  .hero-title {
-    font-size: calc(24px + 2vw);
-    margin-top: 15px !important; /* Headerga yaqinlashtirish uchun */
-    margin-bottom: 12px;
-  }
-  
-  .container {
-    width: 100%;
-    padding: 0 15px;
-  }
-  .main-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  .sidebar {
-    padding: 10px;
-  }
-  .sidebar__menu {
-    display: flex;
-    overflow-x: auto;
-    gap: 10px;
-    padding-bottom: 5px;
-  }
-  .sidebar__item {
-    min-width: 140px;
-    text-align: center;
-  }
-  .content__header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .elements__grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 15px;
-  }
-  .element-preview {
-    height: 150px;
-  }
-  .modal-box {
-    width: 90%;
-    padding: 22px;
-  }
-  .uiverse-modal {
-    width: 92%;
-    height: 90vh;
-    max-height: none;
-  }
-  .uiverse-modal__body {
-    grid-template-columns: 1fr;
-    grid-template-rows: 200px 1fr;
-  }
-  .uiverse-modal__preview-box {
-    border-right: none;
-    border-bottom: 2px solid #252a54;
-    padding: 15px;
-    height: 200px;
-  }
-  .uiverse-modal__code-box {
-    height: calc(100% - 200px);
-  }
-  .uiverse-tabs {
-    padding: 0 5px;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 5px;
-  }
-  .tab-btn {
-    padding: 12px 14px;
-    font-size: 13px;
-    flex-shrink: 0;
-  }
-  .uiverse-code-wrapper {
-    padding: 15px;
-  }
-  .uiverse-code-wrapper pre {
-    font-size: 14px;
-  }
-  .uiverse-code-box-footer {
-    padding: 10px 15px;
-    gap: 10px;
-  }
-  .landing-header__wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-  }
-  .hero-desc {
-    font-size: 15px;
-    margin-bottom: 30px;
-  }
-  .large-btn {
-    font-size: 16px;
-    padding: 12px 32px;
-    width: auto;
-    display: inline-block;
-    min-width: 190px;
-    max-width: 260px;
-  }
-}
-
-@media (max-width: 576px) {
-  /* 🟢 TO'G'RILANDI: Juda kichik ekranlar (Mobile) uchun ham maxsus masofa balansi */
-  .landing-body {
-    padding: 5px 15px 30px 15px !important;
-  }
-  .hero-title {
-    font-size: 28px;
-    margin-top: 10px !important; /* Eng tepaga silliq tortadi */
-  }
-  
-  .hero-desc {
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  .large-btn {
-    width: 100%;
-    max-width: 290px;
-    padding: 12px 20px;
-  }
-  .sidebar__item {
-    min-width: 120px;
-    font-size: 14px;
-  }
-  .elements__grid {
-    grid-template-columns: 1fr !important;
-  }
-  .element-card {
-    width: 100%;
-  }
-  .element-preview {
-    height: 170px;
-  }
-  .modal-box {
-    width: 95%;
-    padding: 15px;
-  }
-  .modal-header h3,
-  .uiverse-modal__header h3 {
-    font-size: 18px;
-  }
-  .close-modal-btn {
-    font-size: 28px;
-  }
-  .uiverse-modal__body {
-    grid-template-rows: 160px 1fr;
-  }
-  .uiverse-modal__preview-box {
-    height: 160px;
-  }
-  .uiverse-modal__code-box {
-    height: calc(100% - 160px);
-  }
-  .uiverse-tabs {
-    flex-wrap: wrap;
-    gap: 2px;
-  }
-  .tab-btn {
-    padding: 10px 12px;
-    font-size: 12px;
-    border-bottom-width: 2px;
-  }
-  .uiverse-code-wrapper pre {
-    font-size: 13px;
-    line-height: 1.5;
-  }
-  .uiverse-code-box-footer {
-    flex-direction: column-reverse;
-    align-items: stretch;
-    padding: 12px;
-  }
-  .uiverse-copy-btn,
-  .submit-neon-btn {
-    width: 100%;
-    text-align: center;
-    padding: 10px;
-  }
-  #copyNotice {
-    text-align: center;
-    display: block;
-    margin-bottom: 5px;
-  }
-}
-
-@media (max-width: 400px) {
-  .hero-title {
-    font-size: 24px;
-  }
-  .header__logo h1 {
-    font-size: 24px;
-  }
-  .sidebar__item {
-    min-width: 110px;
-    padding: 10px;
-  }
-  .element-preview {
-    height: 140px;
-  }
-  .content__header h2 {
-    font-size: 22px;
-  }
-  .uiverse-modal__body {
-    grid-template-rows: 130px 1fr;
-  }
-  .uiverse-modal__preview-box {
-    height: 130px;
-  }
-  .uiverse-modal__code-box {
-    height: calc(100% - 130px);
-  }
-  .tab-btn {
-    padding: 8px 10px;
-    font-size: 11px;
-  }
-  .uiverse-code-wrapper pre {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .landing-header__wrapper {
-    flex-direction: row !important;
-  }
-  .auth-buttons {
-    gap: 8px;
-  }
-  .auth-buttons .tab-btn,
-  .auth-buttons .create-neon-btn {
-    width: auto !important;
-    padding: 8px 14px;
-    font-size: 13px;
-  }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-  .landing-header {
-    padding: 15px 0;
-  }
-  .landing-header__wrapper {
-    gap: 8px;
-  }
-  .landing-header .header__logo h1 {
-    font-size: 18px;
-  }
-  .auth-buttons {
-    gap: 5px;
-  }
-  .auth-buttons .tab-btn,
-  .auth-buttons .create-neon-btn {
-    width: auto !important;
-    padding: 7px 10px;
-    font-size: 11px;
-  }
-  .large-btn {
-    min-width: 160px;
-    max-width: 220px;
-    padding: 10px 22px;
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 768px) {
-  .landing-header .header__logo {
-    width: auto !important;
-    flex: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    text-align: left !important;
-  }
-  .landing-header__wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .landing-header .container {
-    padding-left: 30px !important;
-    padding-right: 30px !important;
-  }
-}
-
-@media (max-width: 360px) {
-  .large-btn {
-    min-width: 140px;
-    max-width: 190px;
-    padding: 9px 18px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 409px) {
-  .header__logo {
-    grid-area: logo;
-    width: auto !important;
-    text-align: left !important;
-    font-size: 10px;
-  }
-}
-
-/* ===== MAIN HEADER RESPONSIVE ===== */
 @media (max-width: 900px) {
   .header__wrapper {
     display: grid !important;
@@ -1156,327 +854,348 @@ body {
   }
 }
 
-@media (max-width: 600px) {
-  .header {
+/* 📱 TABLET BREAKPOINT - 768px va undan past */
+@media (max-width: 768px) {
+  /* Landing Page */
+  .landing-header {
     padding: 12px 0;
   }
-  .header__wrapper {
-    gap: 12px;
-  }
-  .header__logo h1 {
-    font-size: 24px;
-  }
-  .header__search input {
-    width: 50% !important;
-    max-width: 100%;
-    font-size: 14px;
-  }
-  .header__search input:focus {
-    width: 100% !important;
-  }
-  .header__actions {
-    gap: 8px;
-  }
-  .header__actions a,
-  .header__actions button,
-  #userDisplay {
-    font-size: 13px;
-  }
-}
 
-@media (max-width: 769px) {
-  .sidebar {
-    width: 100% !important;
-    padding: 10px !important;
-    margin: 0 auto !important;
-    background: #0b0d1b !important;
-    border: 2px solid #252a54 !important;
-    border-radius: 12px !important;
+  .landing-header__wrapper {
+    padding: 0 15px;
+    gap: 10px;
   }
+
+  .landing-header .header__logo h1 {
+    font-size: 20px;
+    white-space: nowrap;
+  }
+
+  .auth-buttons {
+    gap: 6px;
+  }
+
+  .auth-buttons .tab-btn,
+  .auth-buttons .create-neon-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .landing-body {
+    padding: 20px 15px 40px 15px !important;
+    min-height: 100vh;
+  }
+
+  .hero-title {
+    font-size: 28px;
+    margin-top: 20px !important;
+    margin-bottom: 15px;
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+  }
+
+  .large-btn {
+    font-size: 15px;
+    padding: 12px 28px;
+    min-width: 180px;
+  }
+
+  #animix-main-badge .badge-static {
+    font-size: 16px;
+  }
+
+  #animix-main-badge #dynamic-feature-text {
+    font-size: 16px;
+  }
+
+  /* Dashboard/Main Content */
+  .sidebar {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-bottom: 15px !important;
+    border-right: none !important;
+    border-bottom: 2px solid #252a54 !important;
+    padding: 10px !important;
+    overflow: visible !important;
+    top: auto !important;
+  }
+
   .sidebar__menu {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
+    justify-content: flex-start !important;
     gap: 8px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    list-style: none !important;
+    overflow-x: auto !important;
+    padding: 5px 0 !important;
+    -webkit-overflow-scrolling: touch !important;
   }
+
   .sidebar__item {
-    flex: 1 !important;
-    min-width: 0 !important;
-    padding: 10px 5px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    text-align: center !important;
+    flex: none !important;
+    min-width: 130px !important;
+    padding: 10px 8px !important;
     margin-bottom: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-wrap: nowrap !important;
-    gap: 6px !important;
-    white-space: nowrap !important;
+    font-size: 13px !important;
+    text-align: center !important;
   }
+
   .sidebar__item.active {
     border-left: none !important;
     border-bottom: 3px solid #00f3ff !important;
-    box-shadow: inset 0 -5px 15px rgba(0, 243, 255, 0.15) !important;
   }
-}
 
-@media (max-width: 576px) {
-  .sidebar__item {
-    font-size: 11px !important;
-    padding: 8px 4px !important;
-    gap: 4px !important;
-  }
-}
-
-@media (max-width: 420px) {
-  .sidebar__menu {
-    justify-content: flex-start !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    padding-bottom: 4px !important;
-  }
-  .sidebar__item {
-    flex: none !important;
-    min-width: 115px !important;
-    padding: 8px 10px !important;
-  }
-}
-
-@media (max-width: 769px) {
-  .landing-header .landing-header__wrapper {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+  .main-content {
+    margin-left: 0 !important;
     width: 100% !important;
-    padding: 0 20px !important;
-    gap: 10px !important;
+    padding: 20px 15px !important;
   }
-  .landing-header .header__logo h1 {
-    font-size: clamp(20px, 4vw, 28px) !important;
-    white-space: nowrap !important;
+
+  .elements__grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 15px !important;
   }
-  .auth-buttons {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    flex-shrink: 0 !important;
+
+  .element-preview {
+    height: 150px;
   }
-  .auth-buttons .tab-btn,
-  .auth-buttons .create-neon-btn {
-    font-size: clamp(12px, 2.5vw, 14px) !important;
-    padding: 8px 14px !important;
-    width: auto !important;
+
+  .content__header h2 {
+    font-size: 28px;
   }
-  .header__wrapper {
-    display: grid !important;
-    grid-template-columns: auto 1fr !important;
-    grid-template-areas:
-      "logo actions"
-      "search search" !important;
-    gap: 12px !important;
-    align-items: center !important;
-    width: 100% !important;
+
+  /* Header */
+  .header {
+    padding: 10px 0;
   }
-  .header__logo {
-    grid-area: logo !important;
-  }
+
   .header__logo h1 {
-    font-size: clamp(20px, 4vw, 26px) !important;
-    white-space: nowrap !important;
+    font-size: 20px;
   }
-  .header__actions {
-    grid-area: actions !important;
-    display: flex !important;
-    justify-content: flex-end !important;
-    align-items: center !important;
-    gap: 10px !important;
+
+  .header__search input {
+    width: 70% !important;
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  .header__search input:focus {
     width: 100% !important;
   }
+
+  .header__actions {
+    gap: 6px;
+  }
+
   #headerSaveBtn,
   #profil-konteyner {
-    font-size: clamp(12px, 2.5vw, 14px) !important;
-    padding: 6px 12px !important;
-    white-space: nowrap !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    height: 36px !important;
+    font-size: 12px !important;
+    padding: 6px 10px !important;
   }
-  .header__search {
-    grid-area: search !important;
-    width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-  }
-  .header__search input {
-    width: 350px !important;
-    max-width: 100% !important;
-    height: 40px !important;
-    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-  }
-  .header__search input:focus {
-    width: 100% !important;
-  }
-}
 
-@media (max-width: 480px) {
-  .header__logo h1 {
-    font-size: 18px !important;
-    line-height: 1.1 !important;
+  /* Modal */
+  .modal-box {
+    width: 90%;
+    max-width: 450px;
+    padding: 20px;
   }
-  .header__actions {
-    gap: 6px !important;
-  }
-  #headerSaveBtn,
-  #profil-konteyner {
-    font-size: 11px !important;
-    padding: 5px 8px !important;
-    height: 32px !important;
-  }
-  #profil-konteyner img,
-  #profil-konteyner span {
-    font-size: 11px !important;
-  }
-  .header__search input {
-    width: 300px !important;
-  }
-  .header__search input:focus {
-    width: 100% !important;
-  }
-}
 
-@media (max-width: 360px) {
-  .header__logo h1 {
-    font-size: 16px !important;
-  }
-  #headerSaveBtn {
-    padding: 4px 6px !important;
-  }
-  .header__search input {
-    width: 200px !important;
-  }
-  .header__search input:focus {
-    width: 100% !important;
-  }
-}
-
-@media (max-width: 768px) {
+  /* Code Modal */
   .uiverse-modal {
-    height: 85vh !important;
-    max-height: 580px !important;
-    display: flex !important;
-    flex-direction: column !important;
+    width: 95% !important;
+    height: 90vh !important;
+    max-height: none !important;
   }
+
   .uiverse-modal__body {
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 !important;
-    overflow: hidden !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 160px 1fr !important;
   }
+
   .uiverse-modal__preview-box {
+    border-right: none !important;
+    border-bottom: 2px solid #252a54 !important;
     height: 160px !important;
-    flex-shrink: 0 !important;
   }
+
   .uiverse-modal__code-box {
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 !important;
-    height: calc(100% - 160px) !important;
-    overflow: hidden !important;
-  }
-  .uiverse-code-wrapper {
-    flex: 1 !important;
-    overflow-y: auto !important;
-    padding: 15px !important;
-    min-height: 0 !important;
-  }
-  .uiverse-code-box-footer {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 15px !important;
-    background: #0b0c10 !important;
-    flex-shrink: 0 !important;
-    margin-top: auto !important;
-    border-top: 2px solid #252a54 !important;
-  }
-  .uiverse-copy-btn {
-    width: 100% !important;
-    max-width: 280px !important;
-    margin: 0 auto !important;
-    padding: 12px !important;
     height: auto !important;
   }
-}
 
-@media (max-width: 480px) {
-  .uiverse-modal__preview-box {
-    height: 130px !important;
+  .uiverse-tabs {
+    flex-wrap: wrap;
+    gap: 3px;
   }
-  .uiverse-modal__code-box {
-    height: calc(100% - 130px) !important;
+
+  .tab-btn {
+    padding: 10px 12px !important;
+    font-size: 12px !important;
   }
+
   .uiverse-code-wrapper {
     padding: 12px !important;
   }
+
   .uiverse-code-wrapper pre {
     font-size: 13px !important;
   }
+
   .uiverse-code-box-footer {
-    padding: 12px !important;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: 10px;
   }
+
   .uiverse-copy-btn {
-    padding: 10px !important;
-    font-size: 13px !important;
+    width: 100%;
+    margin: 0;
+  }
+
+  #copyNotice {
+    text-align: center;
   }
 }
 
-@media (max-width: 768px) {
-  /* 🟢 MASOFANI CHIROYLI BALANSGA KELTIRAMIZ */
-  .landing-hero {
-    min-height: auto !important;
-    height: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-  }
-
-  .landing-body {
-    /* 60px dan keyin yozuv juda chiroyli va nafas oladigan masofada turadi */
-    padding-top: 150px !important; 
-    padding-bottom: 40px !important;
-    margin-top: 0 !important;
-    flex: none !important;
-    width: 100% !important;
-  }
-
-  .hero-title {
-    font-size: calc(24px + 2vw);
-    margin-top: 0 !important; /* Qo'shimcha sakrashlarni yo'qotamiz */
-    margin-bottom: 15px !important;
-  }
-  
-  /* ... sening qolgan container, main-layout va sidebar kodlaring shu yerda davom etadi ... */
-}
-
+/* 📱 MOBILE BREAKPOINT - 576px va undan past */
 @media (max-width: 576px) {
-  /* 🟢 TELEFONLARDA HAM JUDA YOPISHIB KETMASLIGI UCHUN */
-  .landing-body {
-    /* Telefon ekranida ham kamida 50px masofa saqlaydi, yopishib ketmaydi */
-    padding-top: 150px !important; 
-    padding-bottom: 30px !important;
+  .landing-header .header__logo h1 {
+    font-size: 18px;
   }
-  
+
   .hero-title {
-    font-size: 26px !important;
-    margin-top: 0 !important;
+    font-size: 24px;
+    margin-top: 15px !important;
   }
-  
-  /* ... sening qolgan media 576px ichidagi kodlaring shu yerda davom etadi ... */
+
+  .hero-desc {
+    font-size: 14px;
+  }
+
+  .large-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  #animix-main-badge .badge-static,
+  #animix-main-badge #dynamic-feature-text {
+    font-size: 14px;
+  }
+
+  .sidebar__item {
+    min-width: 120px !important;
+    font-size: 11px !important;
+  }
+
+  .elements__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .element-preview {
+    height: 140px;
+  }
+
+  .content__header h2 {
+    font-size: 22px;
+  }
+
+  .modal-box {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .uiverse-modal__preview-box {
+    height: 140px !important;
+  }
+
+  .uiverse-code-wrapper pre {
+    font-size: 12px !important;
+  }
+}
+
+/* 📱 EXTRA SMALL - 480px va undan past */
+@media (max-width: 480px) {
+  .landing-header {
+    padding: 10px 0;
+  }
+
+  .hero-title {
+    font-size: 22px;
+    margin-top: 12px !important;
+  }
+
+  .large-btn {
+    min-width: 150px;
+    max-width: 240px;
+  }
+
+  .auth-buttons {
+    gap: 5px;
+  }
+
+  .auth-buttons .tab-btn,
+  .auth-buttons .create-neon-btn {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+
+  .sidebar__menu {
+    gap: 6px !important;
+  }
+
+  .sidebar__item {
+    min-width: 110px !important;
+  }
+
+  .header__logo h1 {
+    font-size: 16px;
+  }
+
+  .header__search input {
+    width: 200px !important;
+  }
+
+  #headerSaveBtn,
+  #profil-konteyner {
+    font-size: 10px !important;
+  }
+
+  .uiverse-modal__preview-box {
+    height: 120px !important;
+  }
+
+  .tab-btn {
+    padding: 8px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .uiverse-code-wrapper pre {
+    font-size: 11px !important;
+  }
+}
+
+/* 📱 ULTRA SMALL - 360px va undan past */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 20px;
+  }
+
+  .hero-desc {
+    font-size: 13px;
+  }
+
+  .large-btn {
+    padding: 8px 16px;
+    min-width: 130px;
+  }
+
+  #animix-main-badge .badge-static,
+  #animix-main-badge #dynamic-feature-text {
+    font-size: 12px;
+  }
 }

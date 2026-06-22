@@ -53,7 +53,7 @@ const menuStyles = [
     baseText: "🪟 Modallar",
     activeText: "🟢 🪟 Modallar",
     title: "Modallar",
-    desc: "Oyna va dialoglar dizayni",
+    desc: "Oyna va dialoglar dizayn",
   },
   {
     key: "card",
@@ -144,11 +144,11 @@ async function loadElementsFromServer() {
 
 createElementForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const name = document.getElementById("elementName")?.value;
-  const category = document.getElementById("elementCategory")?.value;
-  const html = document.getElementById("elementHtml")?.value;
-  const css = document.getElementById("elementCss")?.value;
-  const js = document.getElementById("elementJs")?.value || "";
+  const name = document.getElementById("elName")?.value;
+  const category = document.getElementById("elCategory")?.value;
+  const html = document.getElementById("elHtml")?.value;
+  const css = document.getElementById("elCss")?.value;
+  const js = document.getElementById("elJs")?.value || "";
 
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
   if (!sessionUser || sessionUser.email !== "suxroberkinov438@gmail.com") {
@@ -421,17 +421,33 @@ function checkSession() {
   const sessionUser = JSON.parse(localStorage.getItem("activeUser"));
 
   if (!sessionUser) {
-    if (landingPage) landingPage.style.display = "flex";
-    if (mainDashboard) mainDashboard.style.display = "none";
+    // Landing page ko'rsat
+    if (landingPage) {
+      landingPage.style.display = "flex";
+      landingPage.style.visibility = "visible";
+      landingPage.style.opacity = "1";
+    }
+    if (mainDashboard) {
+      mainDashboard.style.display = "none";
+      mainDashboard.style.visibility = "hidden";
+    }
     if (headerSaveBtn) headerSaveBtn.style.display = "none";
     if (openCreateModalBtn) openCreateModalBtn.style.display = "none";
     return;
   }
 
+  // Dashboard ko'rsat
   const isRealAdmin = sessionUser.email === "suxroberkinov438@gmail.com";
 
-  if (landingPage) landingPage.style.display = "none";
-  if (mainDashboard) mainDashboard.style.display = "block";
+  if (landingPage) {
+    landingPage.style.display = "none";
+    landingPage.style.visibility = "hidden";
+  }
+  if (mainDashboard) {
+    mainDashboard.style.display = "block";
+    mainDashboard.style.visibility = "visible";
+    mainDashboard.style.opacity = "1";
+  }
   if (headerSaveBtn) headerSaveBtn.style.display = "inline-block";
   if (openCreateModalBtn)
     openCreateModalBtn.style.display = isRealAdmin ? "inline-block" : "none";
@@ -460,6 +476,7 @@ function checkSession() {
 logoutBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
   localStorage.removeItem("activeUser");
+  localStorage.removeItem("activeMenuIndex");
   window.location.reload();
 });
 
