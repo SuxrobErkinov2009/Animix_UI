@@ -38,6 +38,15 @@ body {
 }
 
 .container {
+  max-width: 1400px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+/* Landing page container uchun alohida */
+.landing-hero .container,
+.landing-header .container {
   width: 90%;
   max-width: 1400px;
   margin: 0 auto;
@@ -47,15 +56,21 @@ body {
 .header {
   background: #0b0d1b;
   border-bottom: 2px solid #252a54;
-  padding: 15px 0;
+  padding: 15px 38px;
   position: relative;
+  position: sticky;
+  top: 0;
   z-index: 100;
+  overflow: visible;
+  min-height: auto;
 }
 
 .header__wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: 15px;
 }
 
 .header__search input {
@@ -216,9 +231,22 @@ body {
 .main-content {
   margin-left: 300px;
   width: calc(100% - 300px);
-  padding: 40px 20px 40px 24px;
+  padding: 40px 0;
   box-sizing: border-box;
   min-height: 100vh;
+}
+
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.content-area {
+  opacity: 0;
+  animation: pageFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  width: 100%;
+  padding: 0 37px 0 0;
 }
 
 .content__header {
@@ -247,25 +275,26 @@ body {
   text-align: center;
 }
 
-.content-area {
-  opacity: 0;
-  animation: pageFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* ELEMENTS GRID */
+/* ELEMENTS GRID - TO'G'IRLANGAN */
 .elements__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  gap: 10px;
   align-items: start;
   width: 100%;
-  padding: 0 5px;
+  padding: 0;
 }
 
 /* TABLET: 2 ta qator */
 @media (max-width: 1199px) {
   .elements__grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0;
+  }
+
+  .content-area {
+    padding: 0 30px;
   }
 }
 
@@ -273,6 +302,12 @@ body {
 @media (max-width: 767px) {
   .elements__grid {
     grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 0;
+  }
+
+  .content-area {
+    padding: 0 15px;
   }
 }
 
@@ -708,8 +743,13 @@ body {
 }
 
 @keyframes blinkFeatureCursor {
-  from, to { border-color: transparent }
-  50% { border-color: #00f3ff; }
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #00f3ff;
+  }
 }
 
 @keyframes itemGlow {
@@ -770,43 +810,110 @@ body {
     height: 85vh;
     max-height: 600px;
   }
+
+  .elements__grid {
+    padding: 0 20px;
+  }
+
+  .content__header {
+    padding: 0 20px;
+  }
 }
 
 @media (max-width: 900px) {
+  .header {
+    padding: 10px 20px !important;
+    background: #0b0d1b;
+    border-bottom: 2px solid #252a54;
+    padding: 15px 38px;
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* ← 100 dan 1000 ga o'zgartiring */
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 260px;
+    background: rgba(11, 12, 16, 0.98);
+    border-right: 1px solid rgba(0, 243, 255, 0.2);
+    padding: 20px;
+    z-index: 99; /* ← 99 qolib qoying (header dan kichik) */
+    overflow-y: auto;
+    height: calc(100vh - 72px);
+  }
+
+  .main-content {
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    padding: 40px 0;
+    padding-top: 50px; /* ← QO'SHING (header height dan kop) */
+    box-sizing: border-box;
+    min-height: 100vh;
+  }
+
   .header__wrapper {
     display: grid !important;
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "logo actions"
       "search search";
-    gap: 15px;
-    align-items: center;
+    gap: 12px;
+    row-gap: 10px;
+    align-items: flex-start;
   }
+
   .header__logo {
     grid-area: logo;
     width: auto !important;
     text-align: left !important;
+    align-self: center;
   }
+
   .header__search {
     grid-area: search;
     width: 100%;
     display: flex;
     justify-content: center;
+    order: 3;
   }
+
   .header__search input {
     width: 90% !important;
     max-width: 650px;
+    margin: 5px 0;
   }
+
   .header__search input:focus {
     width: 90% !important;
   }
+
   .header__actions {
     grid-area: actions;
     width: auto !important;
     display: flex !important;
     justify-content: flex-end;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .content-area {
+    padding: 0 37px 0 0;
+  }
+
+  .header {
+    background: #0b0d1b;
+    border-bottom: 2px solid #252a54;
+    padding: 15px 38px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow: visible;
+    min-height: auto;
   }
 }
 
@@ -907,36 +1014,40 @@ body {
   .main-content {
     margin-left: 0 !important;
     width: 100% !important;
-    padding: 20px 10px !important;
+    padding: 20px 0 !important;
   }
 
-  .elements__grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
-    gap: 12px !important;
-    padding: 0 3px !important;
-  }
-
-  .element-preview {
-    height: 150px;
-  }
-
-  .content__header h2 {
-    font-size: 28px;
-  }
-
-  /* Header */
   .header {
-    padding: 10px 0;
+    padding: 8px 15px;
+    overflow: visible;
   }
 
-  .header__logo h1 {
-    font-size: 20px;
+  .header__wrapper {
+    display: grid !important;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "logo actions"
+      "search search";
+    gap: 10px;
+    row-gap: 8px;
+    align-items: flex-start;
+  }
+
+  .header__logo {
+    grid-area: logo;
+  }
+
+  .header__search {
+    grid-area: search;
+    width: 100%;
+    order: 3;
   }
 
   .header__search input {
     width: 70% !important;
     max-width: 100%;
     font-size: 14px;
+    margin: 5px auto 0 auto;
   }
 
   .header__search input:focus {
@@ -944,7 +1055,36 @@ body {
   }
 
   .header__actions {
+    grid-area: actions;
     gap: 6px;
+    flex-wrap: wrap;
+    align-self: flex-start;
+  }
+
+  .elements__grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 10px !important;
+    padding: 0 !important;
+  }
+
+  .content-area {
+    padding: 0 35px !important;
+  }
+
+  .element-preview {
+    height: 150px;
+  }
+
+  .content__header {
+    padding: 0 15px;
+  }
+
+  .content__header h2 {
+    font-size: 28px;
+  }
+
+  .header__logo h1 {
+    font-size: 20px;
   }
 
   #headerSaveBtn,
@@ -1048,16 +1188,69 @@ body {
     font-size: 11px !important;
   }
 
+  .header {
+    padding: 6px 10px;
+    overflow: hidden;
+  }
+
+  .header__wrapper {
+    display: grid !important;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "logo actions"
+      "search search";
+    gap: 8px;
+    row-gap: 6px;
+    align-items: flex-start;
+  }
+
+  .header__logo h1 {
+    font-size: 16px;
+  }
+
+  .header__search {
+    grid-area: search;
+    width: 100%;
+  }
+
+  .header__search input {
+    width: 100% !important;
+    font-size: 13px;
+    margin: 3px 0;
+  }
+
+  .header__actions {
+    grid-area: actions;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
   .elements__grid {
     grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 0 !important;
   }
 
   .element-preview {
     height: 140px;
   }
 
+  .content-area {
+    padding: 0 12px !important;
+  }
+
+  .content__header {
+    padding: 0;
+  }
+
   .content__header h2 {
     font-size: 22px;
+  }
+
+  #headerSaveBtn,
+  #profil-konteyner {
+    font-size: 10px !important;
+    padding: 4px 6px !important;
   }
 
   .modal-box {
@@ -1108,19 +1301,6 @@ body {
     min-width: 110px !important;
   }
 
-  .header__logo h1 {
-    font-size: 16px;
-  }
-
-  .header__search input {
-    width: 200px !important;
-  }
-
-  #headerSaveBtn,
-  #profil-konteyner {
-    font-size: 10px !important;
-  }
-
   .uiverse-modal__preview-box {
     height: 120px !important;
   }
@@ -1132,6 +1312,18 @@ body {
 
   .uiverse-code-wrapper pre {
     font-size: 11px !important;
+  }
+
+  .elements__grid {
+    padding: 0 !important;
+  }
+
+  .content-area {
+    padding: 0 10px !important;
+  }
+
+  .content__header {
+    padding: 0;
   }
 }
 
